@@ -1,0 +1,6 @@
+{
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": "{\"productGroup\":\"Milk\",\"amount\":1,\"uom\":\"L\",\"barcode\":\"9002010156785\"}"
+}

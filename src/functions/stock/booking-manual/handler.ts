@@ -6,11 +6,11 @@ import { middyfy } from '@libs/lambda';
 
 import schema from './schema';
 
-const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const bookingManual: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   return formatJSONResponse({
-    message: `Hello, welcome to the exciting Serverless world!`,
+    message: `Manual booking success!`,
     event,
   });
 }
 
-export const main = middyfy(hello);
+export const main = middyfy(bookingManual);
