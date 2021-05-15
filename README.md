@@ -1,5 +1,21 @@
-# Serverless - AWS Node.js Typescript
+# foodlr-service
+This repository contains all lambda functions for the serverless foodlr backend. It consists of a stock service for managing your local stock like barcode/manual import, fracture, enrichment and checkout and a menu service for managing your recipes, generating shopping lists, checkout, freeze and so on.
 
+The services are intended to help you generate weekly shopping lists with ease and keep track of your local stock as well as present those recipes for others.
+
+## Other Componentes
+* [foodlr-cli](https://github.com/mvlasaty23/foodlr-cli)
+* [foodlr-scanner (for android)](https://github.com/mvlasaty23/stock-scanner-native)
+* [foodlr-pwa (TBD)]()
+
+## Architecture
+### Component View
+![componente diagramm](docs/stock_components.png)
+
+### Logical View
+![logical view](docs/ingredient-stock-relation.png)
+
+## Development
 This project has been generated using the `aws-nodejs-typescript` template from the [Serverless framework](https://www.serverless.com/).
 
 For detailed instructions, please refer to the [documentation](https://www.serverless.com/framework/docs/providers/aws/).
