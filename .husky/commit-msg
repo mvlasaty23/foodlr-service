@@ -1,1 +1,1 @@
-commitlint -E HUSKY_GIT_PARAMS
+npm run lint:commit -- --edit $1

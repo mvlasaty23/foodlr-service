@@ -17,10 +17,16 @@
     "format": "prettier -c .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "lint-staged": "lint-staged"
+    "lint:staged": "lint-staged",
+    "lint:commit": "commitlint"
   },
   "lint-staged": {
-    "*.{ts,json,md}": [
+    "*.{ts}": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ],
+    "*.json,md": [
       "prettier --write",
       "git add"
     ]
@@ -32,59 +38,6 @@
     "printWidth": 120,
     "singleQuote": true,
     "trailingComma": "all"
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ],
-    "rules": {
-      "type-case": [
-        2,
-        "always",
-        "lower-case"
-      ],
-      "type-enum": [
-        2,
-        "always",
-        [
-          "build",
-          "chore",
-          "feat",
-          "fix",
-          "refactor",
-          "revert",
-          "test",
-          "deps"
-        ]
-      ],
-      "scope-empty": [
-        2,
-        "always"
-      ],
-      "type-empty": [
-        2,
-        "never"
-      ],
-      "subject-empty": [
-        2,
-        "never"
-      ],
-      "subject-min-length": [
-        2,
-        "always",
-        10
-      ],
-      "subject-full-stop": [
-        2,
-        "never",
-        "."
-      ],
-      "subject-case": [
-        2,
-        "always",
-        "lower-case"
-      ]
-    }
   },
   "dependencies": {
     "@middy/core": "^2.5.4",
