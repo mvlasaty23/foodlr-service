@@ -19,6 +19,19 @@
     "lint:fix": "eslint . --fix",
     "lint-staged": "lint-staged"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm run lint",
+      "pre-push": "npm test --NODE_ENV=test",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,json,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
   "engines": {
     "node": ">=14.15.0"
   },
@@ -79,19 +92,6 @@
         "lower-case"
       ]
     }
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && npm run lint",
-      "pre-push": "npm test --NODE_ENV=test",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
-  "lint-staged": {
-    "*.{js,json,css,scss,html,md}": [
-      "prettier --write",
-      "git add"
-    ]
   },
   "dependencies": {
     "@middy/core": "^2.5.4",
