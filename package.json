@@ -16,7 +16,8 @@
     "test:cov": "jest --coverage",
     "format": "prettier -c .",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "lint-staged": "lint-staged"
   },
   "engines": {
     "node": ">=14.15.0"
@@ -81,10 +82,13 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint && npm run format",
+      "pre-commit": "lint-staged && npm run lint",
       "pre-push": "npm test --NODE_ENV=test",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
+  },
+  "lint-staged": {
+    "*": "prettier --write"
   },
   "dependencies": {
     "@middy/core": "^2.5.4",
