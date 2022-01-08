@@ -29,6 +29,7 @@ const bookingManual: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
           return dbClient
             .update({
               TableName: foodlrTable,
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               Key: stockItem.id,
             })
             .promise();
@@ -47,9 +48,11 @@ const bookingManual: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
             .promise();
         }
       }),
-      map(x => formatJSONResponse({
-        ...event.body,
-      }))
+      map(() =>
+        formatJSONResponse({
+          ...event.body,
+        }),
+      ),
     ),
   );
 };

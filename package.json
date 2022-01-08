@@ -2,16 +2,89 @@
   "name": "foodlr-service",
   "version": "1.0.0",
   "description": "Serverless aws-nodejs-typescript template",
+  "author": "Michael Vlasaty",
+  "license": "MIT",
   "main": "serverless.ts",
   "scripts": {
+    "prepare": "husky install",
     "dynamodb:install": "sls dynamodb install",
     "dynamodb:start": "sls dynamodb start",
     "sls:deploy:dev": "sls deploy --stage dev",
     "sls:deploy:prod": "sls deploy --stage prod",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "format": "prettier -c .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "engines": {
     "node": ">=14.15.0"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "type-case": [
+        2,
+        "always",
+        "lower-case"
+      ],
+      "type-enum": [
+        2,
+        "always",
+        [
+          "build",
+          "chore",
+          "feat",
+          "fix",
+          "refactor",
+          "revert",
+          "test",
+          "deps"
+        ]
+      ],
+      "scope-empty": [
+        2,
+        "always"
+      ],
+      "type-empty": [
+        2,
+        "never"
+      ],
+      "subject-empty": [
+        2,
+        "never"
+      ],
+      "subject-min-length": [
+        2,
+        "always",
+        10
+      ],
+      "subject-full-stop": [
+        2,
+        "never",
+        "."
+      ],
+      "subject-case": [
+        2,
+        "always",
+        "lower-case"
+      ]
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && npm run format",
+      "pre-push": "npm test --NODE_ENV=test",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   },
   "dependencies": {
     "@middy/core": "^2.5.4",
@@ -23,10 +96,25 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^16.0.1",
+    "@commitlint/config-conventional": "^16.0.0",
     "@serverless/typescript": "^2.70.0",
     "@types/aws-lambda": "^8.10.89",
+    "@types/jest": "^27.4.0",
     "@types/node": "^17.0.8",
+    "@typescript-eslint/eslint-plugin": "^5.9.0",
+    "@typescript-eslint/parser": "^5.9.0",
+    "eslint": "^8.6.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jest": "^25.3.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-security": "^1.4.0",
+    "husky": "^7.0.4",
+    "jest": "^27.4.7",
     "json-schema-to-ts": "^1.6.4",
+    "lint-staged": "^12.1.7",
+    "npm-check-updates": "^12.1.0",
     "prettier": "^2.5.1",
     "serverless": "^2.70.0",
     "serverless-bundle": "^5.2.0",
@@ -41,12 +129,5 @@
     "typescript": "^4.5.4",
     "webpack": "^5.65.0",
     "webpack-node-externals": "^3.0.0"
-  },
-  "prettier": {
-    "printWidth": 120,
-    "singleQuote": true,
-    "trailingComma": "all"
-  },
-  "author": "Michael Vlasaty",
-  "license": "MIT"
+  }
 }

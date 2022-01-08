@@ -10,10 +10,10 @@ export default {
         path: 'booking/barcode',
         request: {
           schema: {
-            'application/json': schema
-          }
-        }
-      }
-    }
-  ]
-}
+            'application/json': schema,
+          },
+        },
+      },
+    },
+  ],
+};

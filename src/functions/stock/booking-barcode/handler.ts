@@ -11,6 +11,6 @@ const bookingBarcode: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async 
     message: `Barcode booking success!`,
     event,
   });
-}
+};
 
 export const main = middyfy(bookingBarcode);

@@ -10,10 +10,10 @@ export default {
         path: 'booking/manual',
         request: {
           schema: {
-            'application/json': schema
-          }
-        }
-      }
-    }
-  ]
-}
+            'application/json': schema,
+          },
+        },
+      },
+    },
+  ],
+};
