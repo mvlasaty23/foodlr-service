@@ -51,7 +51,7 @@ const bookingManual: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
       map(() =>
         formatJSONResponse({
           ...event.body,
-        }),
+}),
       ),
     ),
   );
