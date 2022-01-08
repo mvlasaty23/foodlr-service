@@ -16,8 +16,9 @@ const serverlessConfiguration: AWS = {
     // },
     region: '${opt:region, self:provider.region}',
     stage: '${opt:stage, self:provider.stage}',
-    stock_table: '${self:service}-stock-table-${opt:stage, self:provider.stage}',
-    recipe_table: '${self:service}-recipe-table-${opt:stage, self:provider.stage}',
+    foodlr_table: '${self:service}-foodlr-table-${opt:stage, self:provider.stage}',
+    // stock_table: '${self:service}-stock-table-${opt:stage, self:provider.stage}',
+    // recipe_table: '${self:service}-recipe-table-${opt:stage, self:provider.stage}',
     table_throughputs: {
       prod: 1,
       default: 1,
@@ -70,8 +71,9 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       REGION: '${self:custom.region}',
       STAGE: '${self:custom.stage}',
-      STOCK_TABLE: '${self:custom.stock_table}',
-      RECIPE_TABLE: '${self:custom.recipe_table}',
+      FOODLR_TABLE: '${self:custom.foodlr_table}',
+      // STOCK_TABLE: '${self:custom.stock_table}',
+      // RECIPE_TABLE: '${self:custom.recipe_table}',
     },
     iam: {
       role: {
@@ -87,7 +89,7 @@ const serverlessConfiguration: AWS = {
               'dynamodb:UpdateItem',
               'dynamodb:DeleteItem',
             ],
-            Resource: [{ 'Fn::GetAtt': ['StockTable', 'Arn'] }, { 'Fn::GetAtt': ['RecipeTable', 'Arn'] }],
+            Resource: [{ 'Fn::GetAtt': ['FoodlrTable', 'Arn'] }],
           },
         ],
       },
