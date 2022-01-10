@@ -15,7 +15,7 @@ const recipeService = new RecipeService(new RecipeRespository(dbClient, process.
 
 const create: ValidatedEventAPIGatewayProxyHandler<typeof schema> = async (event) => {
   return firstValueFrom(
-    recipeService.create$(Recipe.from(event.body.name, event.body.servings)).pipe(
+    recipeService.create$(Recipe.create(event.body.name, event.body.servings)).pipe(
       map((id) => ({ id: id.value })),
       map(formatJSONResponse),
     ),

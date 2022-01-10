@@ -5,6 +5,7 @@ import { Recipe, RecipeId } from '../domain/recipe.model';
 export class RecipeService {
   constructor(private repository: RecipeRespository) {}
   public create$(recipe: Recipe): Observable<RecipeId> {
+    // TODO: construct domain here!
     return this.repository.create$(recipe);
   }
 

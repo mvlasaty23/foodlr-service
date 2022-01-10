@@ -13,7 +13,7 @@ const dbClient = new AWS.DynamoDB.DocumentClient();
 const recipeService = new RecipeService(new RecipeRespository(dbClient, process.env.FOODLR_TABLE));
 
 const remove: APIGatewayProxyHandler = async (event) => {
-  return firstValueFrom(recipeService.delete$(RecipeId.from(event.pathParameters.id)).pipe(map(() => responseOK())));
+  return firstValueFrom(recipeService.delete$(RecipeId.of(event.pathParameters.id)).pipe(map(() => responseOK())));
 };
 
 export const main = middyfy(remove);

@@ -17,6 +17,7 @@ export class RecipeRespository {
     ).pipe(map((result) => RecipeEntity.of(result.Item).toDomain()));
   }
 
+  // TODO: replace with save$
   public create$(recipe: Recipe): Observable<RecipeId> {
     return from(
       this.db

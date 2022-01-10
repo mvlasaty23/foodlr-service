@@ -6,7 +6,7 @@ export class RecipeId {
   public static create(): RecipeId {
     return new RecipeId(uuid());
   }
-  public static from(id: string): RecipeId {
+  public static of(id: string): RecipeId {
     return new RecipeId(id);
   }
 }
@@ -19,40 +19,40 @@ export class Name {
 export class Servings {
   private constructor(public value: number) {}
   private static DEFAULT = 2;
-  public static orDefault(servingsCount: number): Servings {
+  public static of(servingsCount: number): Servings {
     return new Servings(servingsCount || Servings.DEFAULT);
   }
 }
 export class PreparationMethod {
-  private constructor(private value: string) {}
+  private constructor(public value: string) {}
   public static of(preperation: string): PreparationMethod {
     return new PreparationMethod(preperation);
   }
 }
 export class UomId {
-  private constructor(private value: string) {}
+  private constructor(public value: string) {}
   public static of(uomId: string): UomId {
     return new UomId(uomId);
   }
 }
 export class Quantity {
-  private constructor(private value: number) {}
+  private constructor(public value: number) {}
   public static of(quantityId: number): Quantity {
     return new Quantity(quantityId);
   }
 }
 export class IngredientId {
-  private constructor(private value: string) {}
+  private constructor(public value: string) {}
   public static of(id: string): IngredientId {
     return new IngredientId(id);
   }
 }
 export class PreparedIngredient {
   private constructor(
-    private id: IngredientId,
-    private preparation: PreparationMethod,
-    private uom: UomId,
-    private quantity: Quantity,
+    public id: IngredientId,
+    public preparation: PreparationMethod,
+    public uom: UomId,
+    public quantity: Quantity,
   ) {}
   public static of(
     id: IngredientId,
@@ -64,7 +64,7 @@ export class PreparedIngredient {
   }
 }
 export class PreparationStep {
-  private constructor(private step: string) {}
+  private constructor(public value: string) {}
   public static of(step: string): PreparationStep {
     return new PreparationStep(step);
   }
@@ -81,11 +81,11 @@ export class Recipe {
     public preparations: PreparationStep[],
   ) {}
 
-  public static of(id: string, name: string, servings: number): Recipe {
-    return new Recipe(RecipeId.from(id), Name.of(name), Servings.orDefault(servings), [], []);
+  public static create(name: string, servings: number): Recipe {
+    return new Recipe(RecipeId.create(), Name.of(name), Servings.of(servings), [], []);
   }
-  public static from(name: string, servings: number): Recipe {
-    return new Recipe(RecipeId.create(), Name.of(name), Servings.orDefault(servings), [], []);
+  public static of(id: string, name: string, servings: number): Recipe {
+    return new Recipe(RecipeId.of(id), Name.of(name), Servings.of(servings), [], []);
   }
 }
 
