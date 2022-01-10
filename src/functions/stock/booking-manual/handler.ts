@@ -1,5 +1,4 @@
-import { foodlrTable } from '@functions/common/constants';
-import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/apiGateway';
+import type { ValidatedEventAPIGatewayProxyHandler } from '@libs/apiGateway';
 import { formatJSONResponse } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
 import * as AWS from 'aws-sdk';
@@ -11,13 +10,13 @@ import schema from './schema';
 const dbClient = new AWS.DynamoDB.DocumentClient();
 // TODO: set region by env?
 
-const bookingManual: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const bookingManual: ValidatedEventAPIGatewayProxyHandler<typeof schema> = async (event) => {
   // First check if we have this product in our stock pile
   return firstValueFrom(
     from(
       dbClient
         .get({
-          TableName: foodlrTable,
+          TableName: process.env.FOODLR_TABLE,
           Key: { id: event.body.productGroup },
         })
         .promise(),
@@ -28,7 +27,7 @@ const bookingManual: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
         if (stockItem) {
           return dbClient
             .update({
-              TableName: foodlrTable,
+              TableName: process.env.FOODLR_TABLE,
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               Key: stockItem.id,
             })
@@ -36,7 +35,7 @@ const bookingManual: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
         } else {
           return dbClient
             .put({
-              TableName: foodlrTable,
+              TableName: process.env.FOODLR_TABLE,
               Item: {
                 productGroup: event.body.productGroup,
                 user: 'mvlasaty',

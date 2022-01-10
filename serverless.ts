@@ -1,7 +1,14 @@
 import type { AWS } from '@serverless/typescript';
 
-import bookingManual from '@functions/stock/booking-manual';
-import bookingBarcode from '@functions/stock/booking-barcode';
+import {
+  bookingManual,
+  bookingBarcode,
+  recipeCreate,
+  recipeFindOne,
+  recipeUpdate,
+  recipeDelete,
+  recipeTest,
+} from '@functions/index';
 
 import dynamodbTables from 'resources/dynamodb';
 
@@ -10,10 +17,10 @@ const serverlessConfiguration: AWS = {
   service: 'foodlr-service',
   frameworkVersion: '2',
   custom: {
-    // webpack: {
-    //   webpackConfig: "./webpack.config.js",
-    //   includeModules: true,
-    // },
+    webpack: {
+      webpackConfig: './webpack.config.js',
+      includeModules: true,
+    },
     region: '${opt:region, self:provider.region}',
     stage: '${opt:stage, self:provider.stage}',
     foodlr_table: '${self:service}-foodlr-table-${opt:stage, self:provider.stage}',
@@ -46,12 +53,11 @@ const serverlessConfiguration: AWS = {
     },
   },
   plugins: [
-    // TODO: replace sls-webpack with serverless-bundle - not executing after?
     'serverless-webpack',
+    'serverless-dotenv-plugin',
     // TODO: add dynamodb local vars to .env?
     'serverless-dynamodb-local',
     'serverless-offline',
-    'serverless-dotenv-plugin',
   ],
   // TODO: add serverless-bundle, with custom tsconfig
   package: {
@@ -95,8 +101,7 @@ const serverlessConfiguration: AWS = {
       },
     },
   },
-  // import the function via paths
-  functions: { bookingManual, bookingBarcode },
+  functions: { bookingManual, bookingBarcode, recipeCreate, recipeFindOne, recipeUpdate, recipeDelete, recipeTest },
   resources: {
     Resources: dynamodbTables,
   },
