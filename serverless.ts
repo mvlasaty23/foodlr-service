@@ -1,15 +1,12 @@
-import type { AWS } from '@serverless/typescript';
-
 import {
-  bookingManual,
   bookingBarcode,
+  bookingManual,
   recipeCreate,
+  recipeDelete,
   recipeFindOne,
   recipeUpdate,
-  recipeDelete,
-  recipeTest,
 } from '@functions/index';
-
+import type { AWS } from '@serverless/typescript';
 import dynamodbTables from 'resources/dynamodb';
 
 // TODO: use validate.js or aws request schema?
@@ -101,7 +98,7 @@ const serverlessConfiguration: AWS = {
       },
     },
   },
-  functions: { bookingManual, bookingBarcode, recipeCreate, recipeFindOne, recipeUpdate, recipeDelete, recipeTest },
+  functions: { bookingManual, bookingBarcode, recipeCreate, recipeFindOne, recipeUpdate, recipeDelete },
   resources: {
     Resources: dynamodbTables,
   },
