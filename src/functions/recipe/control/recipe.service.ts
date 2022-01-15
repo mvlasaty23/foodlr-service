@@ -2,10 +2,9 @@ import { Observable } from 'rxjs';
 import { RecipeRespository } from '../entity/recipe.repository';
 import { Recipe, RecipeId } from '../domain/recipe.model';
 
-export class RecipeService {
+export default class RecipeService {
   constructor(private repository: RecipeRespository) {}
   public create$(recipe: Recipe): Observable<RecipeId> {
-    // TODO: construct domain here!
     return this.repository.create$(recipe);
   }
 

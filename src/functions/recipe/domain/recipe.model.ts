@@ -18,9 +18,8 @@ export class Name {
 }
 export class Servings {
   private constructor(public value: number) {}
-  private static DEFAULT = 2;
   public static of(servingsCount: number): Servings {
-    return new Servings(servingsCount || Servings.DEFAULT);
+    return new Servings(servingsCount);
   }
 }
 export class PreparationMethod {

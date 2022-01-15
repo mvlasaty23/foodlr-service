@@ -2,7 +2,7 @@ import { firstValueFrom, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Recipe, RecipeId } from '../domain/recipe.model';
 import { RecipeRespository } from '../entity/recipe.repository';
-import { RecipeService } from './recipe.service';
+import RecipeService from './recipe.service';
 
 describe('RecipeService', () => {
   const mockRepository: Partial<RecipeRespository> = {
