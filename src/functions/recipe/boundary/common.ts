@@ -1,5 +1,12 @@
+import { Recipe } from '@functions/recipe/domain/recipe.model';
 import { formatJSONResponse } from '@libs/apiGateway';
 import { map } from 'rxjs/operators';
-import { Recipe } from '../domain/recipe.model';
 
-export const mapToJsonResponse = map((created: Recipe) => formatJSONResponse({ ...created }));
+export const mapToRecipeDto = map((recipe: Recipe) =>
+  formatJSONResponse({
+    id: recipe.id.value,
+    name: recipe.name.value,
+    servings: recipe.servings.value,
+    preparationSteps: recipe.preparations.map((prep) => prep.value),
+  }),
+);
