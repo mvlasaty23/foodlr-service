@@ -18,7 +18,9 @@ describe('Recipe Find One Handler', () => {
   const handler = findOne$;
   it('should find a recipe by id', () => {
     // Given
-    mockFind$.mockReturnValue(of(Recipe.of('id', 'name', 2)));
+    mockFind$.mockReturnValue(
+      of(Recipe.of('id', 'name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region')),
+    );
     const request: Partial<APIGatewayProxyEvent> = {
       pathParameters: {
         id: 'id',
@@ -35,7 +37,18 @@ describe('Recipe Find One Handler', () => {
           id: 'id',
           name: 'name',
           servings: 2,
-          preparationSteps: [],
+          ingredients: [
+            {
+              name: 'name',
+              quantity: 2,
+              uom: 'uom',
+            },
+          ],
+          preparationTime: 2,
+          preparationUom: 'uom',
+          season: 'season',
+          costs: 2,
+          region: 'region',
         }),
       });
     });

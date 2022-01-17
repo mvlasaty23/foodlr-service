@@ -16,7 +16,17 @@ describe('RecipeService', () => {
   describe('create$', () => {
     it('should create a recipe', () => {
       // Given
-      const recipe = Recipe.of('id', 'name', 2);
+      const recipe = Recipe.of(
+        'id',
+        'name',
+        2,
+        [{ name: 'name', quantity: 2, uom: 'uom' }],
+        2,
+        'uom',
+        'season',
+        2,
+        'region',
+      );
       (mockRepository.create$ as jest.Mock).mockReturnValue(of(recipe.id));
       // When
       return firstValueFrom(
@@ -32,7 +42,17 @@ describe('RecipeService', () => {
   describe('update$', () => {
     it('should update a recipe', () => {
       // Given
-      const recipe = Recipe.of('id', 'name', 2);
+      const recipe = Recipe.of(
+        'id',
+        'name',
+        2,
+        [{ name: 'name', quantity: 2, uom: 'uom' }],
+        2,
+        'uom',
+        'season',
+        2,
+        'region',
+      );
       (mockRepository.save$ as jest.Mock).mockReturnValue(of(recipe));
       // When
       return firstValueFrom(
@@ -48,7 +68,17 @@ describe('RecipeService', () => {
   describe('find$', () => {
     it('should find a recipe', () => {
       // Given
-      const recipe = Recipe.of('id', 'name', 2);
+      const recipe = Recipe.of(
+        'id',
+        'name',
+        2,
+        [{ name: 'name', quantity: 2, uom: 'uom' }],
+        2,
+        'uom',
+        'season',
+        2,
+        'region',
+      );
       (mockRepository.find$ as jest.Mock).mockReturnValue(of(recipe));
       // When
       return firstValueFrom(

@@ -20,11 +20,24 @@ describe('Recipe Create Handler', () => {
   const handler = create$;
   it('should create a new recipe', () => {
     // Given
-    mockCreate$.mockReturnValue(of(Recipe.create('Burger', 2)));
+    mockCreate$.mockReturnValue(
+      of(Recipe.create('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region')),
+    );
     const request: Partial<ValidatedAPIGatewayProxyEvent<typeof schema>> = {
       body: {
         name: 'Burger',
         servings: 2,
+        ingredients: [
+          {
+            name: 'name',
+            quantity: 2,
+            uom: 'uom',
+          },
+        ],
+        preparationTime: { quantity: 2, uom: 'uom' },
+        season: 'season',
+        costs: 2,
+        region: 'region',
       },
     };
     // When

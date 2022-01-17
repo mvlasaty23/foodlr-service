@@ -12,9 +12,22 @@ const dbClient = new AWS.DynamoDB.DocumentClient();
 const recipeService = new RecipeService(new RecipeRespository(dbClient, process.env.FOODLR_TABLE));
 
 export const update$: ValidatedEventAPIGatewayProxyHandler<typeof schema> = async (event) => {
+  const { name, servings, ingredients, preparationTime, season, costs, region } = event.body;
   return firstValueFrom(
     recipeService
-      .update$(Recipe.of(event.pathParameters.id, event.body.name, event.body.servings))
+      .update$(
+        Recipe.of(
+          event.pathParameters.id,
+          name,
+          servings,
+          ingredients,
+          preparationTime.quantity,
+          preparationTime.uom,
+          season,
+          costs,
+          region,
+        ),
+      )
       .pipe(mapToRecipeDto),
   );
 };

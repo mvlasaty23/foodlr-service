@@ -1,22 +1,27 @@
-import {
-  IngredientId,
-  Name,
-  PreparationMethod,
-  PreparationStep,
-  Quantity,
-  Recipe,
-  RecipeId,
-  Servings,
-  UomId,
-} from './recipe.model';
+import { IngredientId, Name, PreparationMethod, Quantity, Recipe, RecipeId, Servings, Uom } from './recipe.model';
 
 describe('Recipe', () => {
   it('should create a new recipe', () => {
     // Given
     const name = 'Burger';
     const servings = 2;
+    const ingredients = [{ name: 'Patty', quantity: 2, uom: 'pcs' }];
+    const preparation = { quantity: 30, uom: 'minutes' };
+    const season = 'summer';
+    const costs = 3;
+    const region = 'ce';
+
     // When
-    const recipe = Recipe.create(name, servings);
+    const recipe = Recipe.create(
+      name,
+      servings,
+      ingredients,
+      preparation.quantity,
+      preparation.uom,
+      season,
+      costs,
+      region,
+    );
     // Then
     expect(recipe.id.value).toBeTruthy();
     expect(recipe).toHaveProperty('name.value', name);
@@ -27,8 +32,23 @@ describe('Recipe', () => {
     const id = 'id';
     const name = 'Burger';
     const servings = 2;
+    const ingredients = [{ name: 'Patty', quantity: 2, uom: 'pcs' }];
+    const preparation = { quantity: 30, uom: 'minutes' };
+    const season = 'summer';
+    const costs = 3;
+    const region = 'ce';
     // When
-    const recipe = Recipe.of(id, name, servings);
+    const recipe = Recipe.of(
+      id,
+      name,
+      servings,
+      ingredients,
+      preparation.quantity,
+      preparation.uom,
+      season,
+      costs,
+      region,
+    );
     // Then
     expect(recipe).toHaveProperty('id.value', id);
     expect(recipe).toHaveProperty('name.value', name);
@@ -70,18 +90,13 @@ interface TestCase<T> {
     value: 'string',
     factory: (value: string) => PreparationMethod.of(value),
   } as TestCase<PreparationMethod>,
-  { objName: 'UomId', value: 'string', factory: (value: string) => UomId.of(value) } as TestCase<UomId>,
+  { objName: 'UomId', value: 'string', factory: (value: string) => Uom.of(value) } as TestCase<Uom>,
   { objName: 'Quantity', value: 23, factory: (value: number) => Quantity.of(value) } as TestCase<Quantity>,
   {
     objName: 'IngredientId',
     value: 'string',
     factory: (value: string) => IngredientId.of(value),
   } as TestCase<IngredientId>,
-  {
-    objName: 'PreparationStep',
-    value: 'string',
-    factory: (value: string) => PreparationStep.of(value),
-  } as TestCase<PreparationStep>,
 ].forEach((testCase) => {
   describe(`${testCase.objName}`, () => {
     it(`should create from ${testCase.value}`, () => {

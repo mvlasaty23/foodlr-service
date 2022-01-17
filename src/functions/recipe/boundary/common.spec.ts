@@ -7,7 +7,17 @@ describe('Common boundary', () => {
   describe('mapToRecipeDto', () => {
     it('should map a recipe to dto', () => {
       // Given
-      const recipe = Recipe.of('id', 'Burger', 2);
+      const recipe = Recipe.of(
+        'id',
+        'name',
+        2,
+        [{ name: 'name', quantity: 2, uom: 'uom' }],
+        2,
+        'uom',
+        'season',
+        2,
+        'region',
+      );
       return firstValueFrom(
         of(recipe).pipe(
           // When
@@ -17,9 +27,14 @@ describe('Common boundary', () => {
             expect(dto).toStrictEqual({
               body: JSON.stringify({
                 id: 'id',
-                name: 'Burger',
+                name: 'name',
                 servings: 2,
-                preparationSteps: [],
+                ingredients: [{ name: 'name', quantity: 2, uom: 'uom' }],
+                preparationTime: 2,
+                preparationUom: 'uom',
+                season: 'season',
+                costs: 2,
+                region: 'region',
               }),
               statusCode: 200,
             }),

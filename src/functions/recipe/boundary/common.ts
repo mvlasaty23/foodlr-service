@@ -7,6 +7,11 @@ export const mapToRecipeDto = map((recipe: Recipe) =>
     id: recipe.id.value,
     name: recipe.name.value,
     servings: recipe.servings.value,
-    preparationSteps: recipe.preparations.map((prep) => prep.value),
+    ingredients: recipe.ingredients.map((it) => ({ name: it.name, quantity: it.quantity, uom: it.uom })),
+    preparationTime: recipe.preparationTime.value,
+    preparationUom: recipe.preparationTime.uom,
+    season: recipe.season.value,
+    costs: recipe.costs.value,
+    region: recipe.region.value,
   }),
 );

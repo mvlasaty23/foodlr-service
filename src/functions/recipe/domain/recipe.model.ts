@@ -28,10 +28,10 @@ export class PreparationMethod {
     return new PreparationMethod(preperation);
   }
 }
-export class UomId {
+export class Uom {
   private constructor(public value: string) {}
-  public static of(uomId: string): UomId {
-    return new UomId(uomId);
+  public static of(uomId: string): Uom {
+    return new Uom(uomId);
   }
 }
 export class Quantity {
@@ -46,52 +46,96 @@ export class IngredientId {
     return new IngredientId(id);
   }
 }
-export class PreparedIngredient {
-  private constructor(
-    public id: IngredientId,
-    public preparation: PreparationMethod,
-    public uom: UomId,
-    public quantity: Quantity,
-  ) {}
-  public static of(
-    id: IngredientId,
-    preparation: PreparationMethod,
-    uom: UomId,
-    quantity: Quantity,
-  ): PreparedIngredient {
-    return new PreparedIngredient(id, preparation, uom, quantity);
+export class Ingredient {
+  private constructor(public name: string, public uom: string, public quantity: number) {}
+  public static of(name: string, uom: string, quantity: number): Ingredient {
+    return new Ingredient(name, uom, quantity);
   }
 }
-export class PreparationStep {
+
+export class Duration {
+  private constructor(public value: number, public uom: string) {}
+
+  public static of(value: number, uom: string): Duration {
+    return new Duration(value, uom);
+  }
+}
+
+export class Season {
   private constructor(public value: string) {}
-  public static of(step: string): PreparationStep {
-    return new PreparationStep(step);
+  public static of(value: string): Season {
+    return new Season(value);
+  }
+}
+
+export class Cost {
+  private constructor(public value: number) {}
+  public static of(value: number): Cost {
+    return new Cost(value);
+  }
+}
+
+export class Region {
+  private constructor(public value: string) {}
+  public static of(value: string): Region {
+    return new Region(value);
   }
 }
 
 // Aggregate
 export class Recipe {
-  constructor(
+  private constructor(
     public id: RecipeId,
     public name: Name,
     public servings: Servings,
-    // Projection of ingredient
-    public ingredients: PreparedIngredient[],
-    public preparations: PreparationStep[],
+    public ingredients: Ingredient[],
+    public preparationTime: Duration,
+    public season: Season,
+    public costs: Cost,
+    public region: Region,
   ) {}
 
-  public static create(name: string, servings: number): Recipe {
-    return new Recipe(RecipeId.create(), Name.of(name), Servings.of(servings), [], []);
+  public static create(
+    name: string,
+    servings: number,
+    ingredients: { name: string; uom: string; quantity: number }[],
+    prepTime: number,
+    prepUom: string,
+    season: string,
+    costs: number,
+    region: string,
+  ): Recipe {
+    return new Recipe(
+      RecipeId.create(),
+      Name.of(name),
+      Servings.of(servings),
+      ingredients.map(({ name, quantity, uom }) => Ingredient.of(name, uom, quantity)),
+      Duration.of(prepTime, prepUom),
+      Season.of(season),
+      Cost.of(costs),
+      Region.of(region),
+    );
   }
-  public static of(id: string, name: string, servings: number): Recipe {
-    return new Recipe(RecipeId.of(id), Name.of(name), Servings.of(servings), [], []);
+  public static of(
+    id: string,
+    name: string,
+    servings: number,
+    ingredients: { name: string; uom: string; quantity: number }[],
+    prepTime: number,
+    prepUom: string,
+    season: string,
+    costs: number,
+    region: string,
+  ): Recipe {
+    return new Recipe(
+      RecipeId.of(id),
+      Name.of(name),
+      Servings.of(servings),
+      ingredients.map(({ name, quantity, uom }) => Ingredient.of(name, uom, quantity)),
+      Duration.of(prepTime, prepUom),
+      Season.of(season),
+      Cost.of(costs),
+      Region.of(region),
+    );
   }
-}
-
-export interface SearchModel {
-  recipeName: string;
-  season: string;
-  region: string;
-  expensivness: string;
-  preparationTime: string;
 }
