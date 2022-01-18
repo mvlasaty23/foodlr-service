@@ -1,13 +1,12 @@
 import { firstValueFrom, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Recipe, RecipeId } from '../domain/recipe.model';
+import { Name, Recipe, Region } from '../domain/recipe.model';
 import { RecipeRespository } from '../entity/recipe.repository';
 import RecipeService from './recipe.service';
 
 describe('RecipeService', () => {
   const mockRepository: Partial<RecipeRespository> = {
     find$: jest.fn(),
-    create$: jest.fn(),
     save$: jest.fn(),
     delete$: jest.fn(),
   };
@@ -16,24 +15,14 @@ describe('RecipeService', () => {
   describe('create$', () => {
     it('should create a recipe', () => {
       // Given
-      const recipe = Recipe.of(
-        'id',
-        'name',
-        2,
-        [{ name: 'name', quantity: 2, uom: 'uom' }],
-        2,
-        'uom',
-        'season',
-        2,
-        'region',
-      );
-      (mockRepository.create$ as jest.Mock).mockReturnValue(of(recipe.id));
+      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region');
+      (mockRepository.save$ as jest.Mock).mockReturnValue(of(recipe));
       // When
       return firstValueFrom(
         service.create$(recipe).pipe(
-          map((recipeId) => {
-            expect(recipeId).toStrictEqual(recipe.id);
-            expect(mockRepository.create$).toHaveBeenCalled();
+          map((recipe) => {
+            expect(recipe).toStrictEqual(recipe);
+            expect(mockRepository.save$).toHaveBeenCalled();
           }),
         ),
       );
@@ -42,17 +31,7 @@ describe('RecipeService', () => {
   describe('update$', () => {
     it('should update a recipe', () => {
       // Given
-      const recipe = Recipe.of(
-        'id',
-        'name',
-        2,
-        [{ name: 'name', quantity: 2, uom: 'uom' }],
-        2,
-        'uom',
-        'season',
-        2,
-        'region',
-      );
+      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region');
       (mockRepository.save$ as jest.Mock).mockReturnValue(of(recipe));
       // When
       return firstValueFrom(
@@ -68,21 +47,11 @@ describe('RecipeService', () => {
   describe('find$', () => {
     it('should find a recipe', () => {
       // Given
-      const recipe = Recipe.of(
-        'id',
-        'name',
-        2,
-        [{ name: 'name', quantity: 2, uom: 'uom' }],
-        2,
-        'uom',
-        'season',
-        2,
-        'region',
-      );
+      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region');
       (mockRepository.find$ as jest.Mock).mockReturnValue(of(recipe));
       // When
       return firstValueFrom(
-        service.find$(recipe.id).pipe(
+        service.find$({ region: Region.of('region'), name: Name.of('name') }).pipe(
           map((recipe) => {
             expect(recipe).toStrictEqual(recipe);
             expect(mockRepository.find$).toHaveBeenCalled();
@@ -97,7 +66,7 @@ describe('RecipeService', () => {
       (mockRepository.delete$ as jest.Mock).mockReturnValue(of(true));
       // When
       return firstValueFrom(
-        service.delete$(RecipeId.of('id')).pipe(
+        service.delete$({ region: Region.of('region'), name: Name.of('name') }).pipe(
           map(() => {
             expect(mockRepository.delete$).toHaveBeenCalled();
           }),

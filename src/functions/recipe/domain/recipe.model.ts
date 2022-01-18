@@ -1,15 +1,4 @@
-import { v4 as uuid } from 'uuid';
-
 // Object Values
-export class RecipeId {
-  private constructor(public value: string) {}
-  public static create(): RecipeId {
-    return new RecipeId(uuid());
-  }
-  public static of(id: string): RecipeId {
-    return new RecipeId(id);
-  }
-}
 export class Name {
   private constructor(public value: string) {}
   public static of(name: string): Name {
@@ -85,7 +74,7 @@ export class Region {
 // Aggregate
 export class Recipe {
   private constructor(
-    public id: RecipeId,
+    // TODO: slug for names
     public name: Name,
     public servings: Servings,
     public ingredients: Ingredient[],
@@ -95,29 +84,7 @@ export class Recipe {
     public region: Region,
   ) {}
 
-  public static create(
-    name: string,
-    servings: number,
-    ingredients: { name: string; uom: string; quantity: number }[],
-    prepTime: number,
-    prepUom: string,
-    season: string,
-    costs: number,
-    region: string,
-  ): Recipe {
-    return new Recipe(
-      RecipeId.create(),
-      Name.of(name),
-      Servings.of(servings),
-      ingredients.map(({ name, quantity, uom }) => Ingredient.of(name, uom, quantity)),
-      Duration.of(prepTime, prepUom),
-      Season.of(season),
-      Cost.of(costs),
-      Region.of(region),
-    );
-  }
   public static of(
-    id: string,
     name: string,
     servings: number,
     ingredients: { name: string; uom: string; quantity: number }[],
@@ -128,7 +95,6 @@ export class Recipe {
     region: string,
   ): Recipe {
     return new Recipe(
-      RecipeId.of(id),
       Name.of(name),
       Servings.of(servings),
       ingredients.map(({ name, quantity, uom }) => Ingredient.of(name, uom, quantity)),

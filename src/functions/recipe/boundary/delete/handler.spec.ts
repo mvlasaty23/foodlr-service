@@ -1,4 +1,4 @@
-import { RecipeId } from '@functions/recipe/domain/recipe.model';
+import { Name, RecipeId, Region } from '@functions/recipe/domain/recipe.model';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { Observable, of } from 'rxjs';
 import { delete$ } from './handler';
@@ -21,13 +21,14 @@ describe('Recipe Delete Handler', () => {
     mockDelete$.mockReturnValue(of(true));
     const request: Partial<APIGatewayProxyEvent> = {
       pathParameters: {
-        id: 'id',
+        region: 'region',
+        name: 'name',
       },
     };
     // When
     const response = handler(request as APIGatewayProxyEvent, null, null);
     return (response as Promise<APIGatewayProxyResult>).then((res) => {
-      expect(mockDelete$).toHaveBeenCalledWith(RecipeId.of('id'));
+      expect(mockDelete$).toHaveBeenCalledWith({ region: Region.of('region'), name: Name.of('name') });
       expect(res.statusCode).toBe(200);
       expect(res.body).toBeFalsy();
     });

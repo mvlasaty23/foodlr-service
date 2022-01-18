@@ -1,4 +1,5 @@
-import { Recipe, RecipeId } from '@functions/recipe/domain/recipe.model';
+import { RecipeIdentity } from '@functions/recipe/control/recipe.service';
+import { Name, Recipe, Region } from '@functions/recipe/domain/recipe.model';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { Observable, of } from 'rxjs';
 import { findOne$ } from './handler';
@@ -10,7 +11,7 @@ jest.mock('aws-sdk');
 jest.mock('@functions/recipe/entity/recipe.repository');
 jest.mock('@functions/recipe/control/recipe.service', () =>
   jest.fn().mockImplementation(() => ({
-    find$: (id: RecipeId) => mockFind$(id),
+    find$: (id: RecipeIdentity) => mockFind$(id),
   })),
 );
 
@@ -19,22 +20,22 @@ describe('Recipe Find One Handler', () => {
   it('should find a recipe by id', () => {
     // Given
     mockFind$.mockReturnValue(
-      of(Recipe.of('id', 'name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region')),
+      of(Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region')),
     );
     const request: Partial<APIGatewayProxyEvent> = {
       pathParameters: {
-        id: 'id',
+        name: 'name',
+        region: 'region',
       },
     };
     // When
     const response = handler(request as APIGatewayProxyEvent, null, null);
     // Then
     return (response as Promise<APIGatewayProxyResult>).then((res) => {
-      expect(mockFind$).toHaveBeenCalledWith(RecipeId.of('id'));
+      expect(mockFind$).toHaveBeenCalledWith({ region: Region.of('region'), name: Name.of('name') });
       expect(res).toStrictEqual({
         statusCode: 200,
         body: JSON.stringify({
-          id: 'id',
           name: 'name',
           servings: 2,
           ingredients: [

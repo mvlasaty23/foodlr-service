@@ -21,12 +21,9 @@ describe('Recipe Update Handler', () => {
   it('should create a new recipe', () => {
     // Given
     mockUpdate$.mockReturnValue(
-      of(Recipe.of('id', 'name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region')),
+      of(Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region')),
     );
     const request: Partial<ValidatedAPIGatewayProxyEvent<typeof schema>> = {
-      pathParameters: {
-        id: 'id',
-      },
       body: {
         name: 'name',
         servings: 2,
@@ -48,12 +45,11 @@ describe('Recipe Update Handler', () => {
     // Then
     return (response as Promise<APIGatewayProxyResult>).then((res) => {
       expect(mockUpdate$).toHaveBeenCalledWith(
-        Recipe.of('id', 'name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region'),
+        Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region'),
       );
       expect(res).toStrictEqual({
         statusCode: 200,
         body: JSON.stringify({
-          id: 'id',
           name: 'name',
           servings: 2,
           ingredients: [

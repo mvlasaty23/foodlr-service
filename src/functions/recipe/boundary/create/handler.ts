@@ -2,12 +2,12 @@ import schema from '@functions/recipe/boundary/dto/recipe.dto.schema';
 import RecipeService from '@functions/recipe/control/recipe.service';
 import { Recipe } from '@functions/recipe/domain/recipe.model';
 import { RecipeRespository } from '@functions/recipe/entity/recipe.repository';
-import { formatJSONResponse, ValidatedEventAPIGatewayProxyHandler } from '@libs/apiGateway';
+import { ValidatedEventAPIGatewayProxyHandler } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
 import * as AWS from 'aws-sdk';
 import { firstValueFrom } from 'rxjs';
-import { map } from 'rxjs/operators';
 import 'source-map-support/register';
+import { mapToRecipeDto } from '../common';
 
 // AWS.config.update({ region: process.env.REGION });
 const dbClient = new AWS.DynamoDB.DocumentClient();
@@ -18,21 +18,9 @@ export const create$: ValidatedEventAPIGatewayProxyHandler<typeof schema> = asyn
   return firstValueFrom(
     recipeService
       .create$(
-        Recipe.create(
-          name,
-          servings,
-          ingredients,
-          preparationTime.quantity,
-          preparationTime.uom,
-          season,
-          costs,
-          region,
-        ),
+        Recipe.of(name, servings, ingredients, preparationTime.quantity, preparationTime.uom, season, costs, region),
       )
-      .pipe(
-        map((id) => ({ id: id.value })),
-        map(formatJSONResponse),
-      ),
+      .pipe(mapToRecipeDto),
   );
 };
 

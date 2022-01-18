@@ -1,4 +1,3 @@
-// TODO: add ProductTable
 export default {
   FoodlrTable: {
     Type: 'AWS::DynamoDB::Table',
@@ -6,12 +5,12 @@ export default {
     Properties: {
       TableName: '${self:provider.environment.FOODLR_TABLE}',
       AttributeDefinitions: [
-        { AttributeName: 'id', AttributeType: 'S' },
-        { AttributeName: 'groupKey', AttributeType: 'S' },
+        { AttributeName: 'region', AttributeType: 'S' },
+        { AttributeName: 'name', AttributeType: 'S' },
       ],
       KeySchema: [
-        { AttributeName: 'id', KeyType: 'HASH' },
-        { AttributeName: 'groupKey', KeyType: 'RANGE' },
+        { AttributeName: 'region', KeyType: 'HASH' },
+        { AttributeName: 'name', KeyType: 'RANGE' },
       ],
       ProvisionedThroughput: {
         ReadCapacityUnits:
