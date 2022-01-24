@@ -1,7 +1,8 @@
+import { Name, Recipe } from '@functions/recipe/domain/recipe.model';
+import { Region } from '@functions/recipe/domain/region.model';
+import { RecipeRespository } from '@functions/recipe/entity/recipe.repository';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Name, Recipe, Region } from '../domain/recipe.model';
-import { RecipeRespository } from '../entity/recipe.repository';
 
 export interface RecipeIdentity {
   region: Region;

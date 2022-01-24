@@ -1,6 +1,7 @@
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { firstValueFrom, map } from 'rxjs';
-import { Name, Recipe, Region } from '../domain/recipe.model';
+import { Name, Recipe } from '../domain/recipe.model';
+import { Region } from '../domain/region.model';
 import { RecipeRespository } from './recipe.repository';
 
 describe('RecipeRepository', () => {
@@ -24,7 +25,7 @@ describe('RecipeRepository', () => {
               name: 'Burger',
               servings: 2,
               ingredients: [{ name: 'name', quantity: 2, uom: 'uom' }],
-              preparationTime: { value: 2, uom: 'uom' },
+              preparationTime: { value: 2 },
               season: 'season',
               costs: 2,
               region: 'region',
@@ -50,7 +51,7 @@ describe('RecipeRepository', () => {
   describe('save$', () => {
     it('should update a recipe', () => {
       // Given
-      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region');
+      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region');
       (mockClient.put as jest.Mock).mockReturnValue({
         promise: () =>
           Promise.resolve({
@@ -71,7 +72,11 @@ describe('RecipeRepository', () => {
               Item: {
                 name: recipe.name.value,
                 servings: recipe.servings.value,
-                ingredients: recipe.ingredients.map((it) => ({ ...it })),
+                ingredients: recipe.ingredients.map((it) => ({
+                  name: it.name.value,
+                  uom: it.uom.value,
+                  quantity: it.quantity.value,
+                })),
                 preparationTime: { ...recipe.preparationTime },
                 season: recipe.season.value,
                 costs: recipe.costs.value,

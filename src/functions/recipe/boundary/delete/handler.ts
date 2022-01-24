@@ -1,5 +1,6 @@
 import RecipeService from '@functions/recipe/control/recipe.service';
-import { Name, Region } from '@functions/recipe/domain/recipe.model';
+import { Name } from '@functions/recipe/domain/recipe.model';
+import { Region } from '@functions/recipe/domain/region.model';
 import { RecipeRespository } from '@functions/recipe/entity/recipe.repository';
 import { APIGatewayProxyHandler, responseOK } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';

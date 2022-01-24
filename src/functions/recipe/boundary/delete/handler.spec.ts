@@ -1,4 +1,6 @@
-import { Name, RecipeId, Region } from '@functions/recipe/domain/recipe.model';
+import { RecipeIdentity } from '@functions/recipe/control/recipe.service';
+import { Name } from '@functions/recipe/domain/recipe.model';
+import { Region } from '@functions/recipe/domain/region.model';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { Observable, of } from 'rxjs';
 import { delete$ } from './handler';
@@ -10,7 +12,7 @@ jest.mock('aws-sdk');
 jest.mock('@functions/recipe/entity/recipe.repository');
 jest.mock('@functions/recipe/control/recipe.service', () =>
   jest.fn().mockImplementation(() => ({
-    delete$: (id: RecipeId) => mockDelete$(id),
+    delete$: (deleteAction: RecipeIdentity) => mockDelete$(deleteAction),
   })),
 );
 

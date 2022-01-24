@@ -1,5 +1,6 @@
 import { RecipeIdentity } from '@functions/recipe/control/recipe.service';
-import { Name, Recipe, Region } from '@functions/recipe/domain/recipe.model';
+import { Name, Recipe } from '@functions/recipe/domain/recipe.model';
+import { Region } from '@functions/recipe/domain/region.model';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { Observable, of } from 'rxjs';
 import { findOne$ } from './handler';
@@ -20,7 +21,7 @@ describe('Recipe Find One Handler', () => {
   it('should find a recipe by id', () => {
     // Given
     mockFind$.mockReturnValue(
-      of(Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region')),
+      of(Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region')),
     );
     const request: Partial<APIGatewayProxyEvent> = {
       pathParameters: {
@@ -46,7 +47,6 @@ describe('Recipe Find One Handler', () => {
             },
           ],
           preparationTime: 2,
-          preparationUom: 'uom',
           season: 'season',
           costs: 2,
           region: 'region',

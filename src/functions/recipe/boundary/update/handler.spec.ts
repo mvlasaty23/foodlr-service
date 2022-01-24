@@ -18,10 +18,10 @@ jest.mock('@functions/recipe/control/recipe.service', () =>
 
 describe('Recipe Update Handler', () => {
   const handler = update$;
-  it('should create a new recipe', () => {
+  it('should update a recipe', () => {
     // Given
     mockUpdate$.mockReturnValue(
-      of(Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region')),
+      of(Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region')),
     );
     const request: Partial<ValidatedAPIGatewayProxyEvent<typeof schema>> = {
       body: {
@@ -45,7 +45,7 @@ describe('Recipe Update Handler', () => {
     // Then
     return (response as Promise<APIGatewayProxyResult>).then((res) => {
       expect(mockUpdate$).toHaveBeenCalledWith(
-        Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region'),
+        Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region'),
       );
       expect(res).toStrictEqual({
         statusCode: 200,
@@ -60,7 +60,6 @@ describe('Recipe Update Handler', () => {
             },
           ],
           preparationTime: 2,
-          preparationUom: 'uom',
           season: 'season',
           costs: 2,
           region: 'region',

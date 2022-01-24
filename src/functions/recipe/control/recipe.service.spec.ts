@@ -1,6 +1,7 @@
 import { firstValueFrom, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Name, Recipe, Region } from '../domain/recipe.model';
+import { Name, Recipe } from '../domain/recipe.model';
+import { Region } from '../domain/region.model';
 import { RecipeRespository } from '../entity/recipe.repository';
 import RecipeService from './recipe.service';
 
@@ -15,7 +16,7 @@ describe('RecipeService', () => {
   describe('create$', () => {
     it('should create a recipe', () => {
       // Given
-      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region');
+      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region');
       (mockRepository.save$ as jest.Mock).mockReturnValue(of(recipe));
       // When
       return firstValueFrom(
@@ -31,7 +32,7 @@ describe('RecipeService', () => {
   describe('update$', () => {
     it('should update a recipe', () => {
       // Given
-      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region');
+      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region');
       (mockRepository.save$ as jest.Mock).mockReturnValue(of(recipe));
       // When
       return firstValueFrom(
@@ -47,7 +48,7 @@ describe('RecipeService', () => {
   describe('find$', () => {
     it('should find a recipe', () => {
       // Given
-      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region');
+      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region');
       (mockRepository.find$ as jest.Mock).mockReturnValue(of(recipe));
       // When
       return firstValueFrom(

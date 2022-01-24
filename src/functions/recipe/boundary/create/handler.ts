@@ -17,9 +17,7 @@ export const create$: ValidatedEventAPIGatewayProxyHandler<typeof schema> = asyn
   const { name, servings, ingredients, preparationTime, season, costs, region } = event.body;
   return firstValueFrom(
     recipeService
-      .create$(
-        Recipe.of(name, servings, ingredients, preparationTime.quantity, preparationTime.uom, season, costs, region),
-      )
+      .create$(Recipe.of(name, servings, ingredients, preparationTime.quantity, season, costs, region))
       .pipe(mapToRecipeDto),
   );
 };

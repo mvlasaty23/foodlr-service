@@ -7,7 +7,7 @@ describe('Common boundary', () => {
   describe('mapToRecipeDto', () => {
     it('should map a recipe to dto', () => {
       // Given
-      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region');
+      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region');
       return firstValueFrom(
         of(recipe).pipe(
           // When
@@ -20,7 +20,6 @@ describe('Common boundary', () => {
                 servings: 2,
                 ingredients: [{ name: 'name', quantity: 2, uom: 'uom' }],
                 preparationTime: 2,
-                preparationUom: 'uom',
                 season: 'season',
                 costs: 2,
                 region: 'region',

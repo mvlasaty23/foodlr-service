@@ -15,9 +15,7 @@ export const update$: ValidatedEventAPIGatewayProxyHandler<typeof schema> = asyn
   const { name, servings, ingredients, preparationTime, season, costs, region } = event.body;
   return firstValueFrom(
     recipeService
-      .update$(
-        Recipe.of(name, servings, ingredients, preparationTime.quantity, preparationTime.uom, season, costs, region),
-      )
+      .update$(Recipe.of(name, servings, ingredients, preparationTime.quantity, season, costs, region))
       .pipe(mapToRecipeDto),
   );
 };

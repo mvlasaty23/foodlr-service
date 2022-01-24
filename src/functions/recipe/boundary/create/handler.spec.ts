@@ -21,7 +21,7 @@ describe('Recipe Create Handler', () => {
   it('should create a new recipe', () => {
     // Given
     mockCreate$.mockReturnValue(
-      of(Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'uom', 'season', 2, 'region')),
+      of(Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region')),
     );
     const request: Partial<ValidatedAPIGatewayProxyEvent<typeof schema>> = {
       body: {

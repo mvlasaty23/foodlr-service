@@ -8,7 +8,6 @@ interface IIngredient {
 }
 interface IPreparationTime {
   value: number;
-  uom: string;
 }
 export class RecipeEntity {
   private constructor(
@@ -25,8 +24,8 @@ export class RecipeEntity {
     return new RecipeEntity(
       recipe.name.value,
       recipe.servings.value,
-      recipe.ingredients.map((it) => ({ ...it })),
-      { value: recipe.preparationTime.value, uom: recipe.preparationTime.uom },
+      recipe.ingredients.map((it) => ({ name: it.name.value, quantity: it.quantity.value, uom: it.uom.value })),
+      { value: recipe.preparationTime.value },
       recipe.season.value,
       recipe.costs.value,
       recipe.region.value,
@@ -50,7 +49,6 @@ export class RecipeEntity {
       this.servings,
       this.ingredients,
       this.preparationTime.value,
-      this.preparationTime.uom,
       this.season,
       this.costs,
       this.region,
