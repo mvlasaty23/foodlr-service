@@ -43,22 +43,35 @@ export class MenuPlanBuilder {
     this.validate();
 
     const eligbaleRecipes = this.recipes
-      .filter((recipe) => this.habbits.mealTypes.some((it) => recipe.type.equals(it)))
-      .filter((recipe) => this.habbits.preferredCosts.includes(recipe.costs.asCostType()))
-      .filter((recipe) => this.habbits.preferredPrepTime.includes(recipe.preparationTime.asDurationType()));
+      .filter(this.byMealTypes(this.habbits.mealTypes))
+      .filter(this.byPreferredCosts(this.habbits.preferredCosts))
+      .filter(this.byPreferredPrepTime(this.habbits.preferredPrepTime));
 
     const recipes: IRecipe[] = [];
     for (let i = 0; i < this.mealsInPeriod(); i++) {
-      recipes.push(eligbaleRecipes[Math.floor(Math.random() * eligbaleRecipes.length)]);
+      recipes.push(this.randomFrom(eligbaleRecipes));
     }
+
     return new MenuPlan(recipes, this.startDay, this.endDay);
   }
 
+  private byMealTypes(mealTypes: MealType[]) {
+    return (recipe: IRecipe) => mealTypes.some((type) => recipe.type.equals(type));
+  }
+  private byPreferredCosts(costs: CostType[]) {
+    return (recipe: IRecipe) => costs.includes(recipe.costs.asCostType());
+  }
+  private byPreferredPrepTime(durations: DurationType[]) {
+    return (recipe: IRecipe) => durations.includes(recipe.preparationTime.asDurationType());
+  }
   private mealsInPeriod(): number {
     return this.periodInDays() * this.habbits.mealsPerDay;
   }
   private periodInDays(): number {
     return Math.abs((this.startDay.getTime() - this.endDay.getTime()) / (1000 * 3600 * 24));
+  }
+  private randomFrom(recipes: IRecipe[]): IRecipe {
+    return recipes[Math.floor(Math.random() * recipes.length)];
   }
   private validate(): void {
     assertOk(!!this.recipes && this.recipes.length > 0, 'Recipes should not be null or empty');
