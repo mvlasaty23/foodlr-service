@@ -13,7 +13,7 @@ export enum DurationType {
 export class Duration {
   private constructor(public value: number) {}
   public static of(value: number): Duration {
-    assertOk(value && value > 0);
+    assertOk(value && value > 0, 'Duration should not be empty or less than 1');
     return new Duration(value);
   }
 

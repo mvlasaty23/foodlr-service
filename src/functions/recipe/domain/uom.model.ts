@@ -22,7 +22,7 @@ export type UomKey = keyof typeof solidUomBaseFactor | keyof typeof liquidUomBas
 export class Uom {
   private constructor(public value: UomKey) {}
   public static of(uom: UomKey): Uom {
-    assertOk(uom);
+    assertOk(uom, 'Uom should not be null');
     return new Uom(uom);
   }
 }

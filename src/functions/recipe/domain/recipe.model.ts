@@ -2,7 +2,7 @@ import { ok as assertOk } from 'assert';
 import { Cost } from './cost.model';
 import { Duration } from './duration.model';
 import { MealType, MealTypes } from './mealtype.model';
-import { Region } from './region.model';
+import { Region, RegionKeys } from './region.model';
 import { Season, SeasonKeys } from './season.model';
 import { Uom, UomKey } from './uom.model';
 
@@ -10,14 +10,14 @@ import { Uom, UomKey } from './uom.model';
 export class Name {
   private constructor(public value: string) {}
   public static of(name: string): Name {
-    assertOk(!!name);
+    assertOk(!!name, 'Name should not be null');
     return new Name(name);
   }
 }
 export class Servings {
   private constructor(public value: number) {}
   public static of(servingsCount: number): Servings {
-    assertOk(servingsCount && servingsCount > 0);
+    assertOk(servingsCount && servingsCount > 0, 'Servings should not be null or less than 1');
     return new Servings(servingsCount);
   }
 }
@@ -25,7 +25,7 @@ export class Servings {
 export class Quantity {
   private constructor(public value: number) {}
   public static of(quantity: number): Quantity {
-    assertOk(quantity && quantity > 0);
+    assertOk(quantity && quantity > 0, 'Quantity should not be null or less than 1');
     return new Quantity(quantity);
   }
 }
@@ -72,22 +72,22 @@ export class Recipe implements IRecipe {
     return new Recipe(
       Name.of(name),
       Servings.of(servings),
-      ingredients.map(({ name, quantity, uom }) => Ingredient.of(name, uom, quantity)),
+      ingredients.map(({ name, quantity, uom }) => Ingredient.of(name, uom as UomKey, quantity)),
       Duration.of(prepTime),
       Season.of(season as SeasonKeys),
       Cost.of(costs),
-      Region.of(region),
+      Region.of(region as RegionKeys),
       MealType.of('all'),
     );
   }
   public static ofObj(options: {
     name: string;
     servings: number;
-    ingredients: { name: string; uom: string; quantity: number }[];
+    ingredients: { name: string; uom: UomKey; quantity: number }[];
     prepTime: number;
-    season: string;
+    season: SeasonKeys;
     costs: number;
-    region: string;
+    region: RegionKeys;
     type: MealTypes;
   }): Recipe {
     return new Recipe(
@@ -95,7 +95,7 @@ export class Recipe implements IRecipe {
       Servings.of(options.servings),
       options.ingredients.map(({ name, quantity, uom }) => Ingredient.of(name, uom, quantity)),
       Duration.of(options.prepTime),
-      Season.of(options.season as SeasonKeys),
+      Season.of(options.season),
       Cost.of(options.costs),
       Region.of(options.region),
       MealType.of(options.type),

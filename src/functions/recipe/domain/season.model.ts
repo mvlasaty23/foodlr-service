@@ -5,7 +5,7 @@ export type SeasonKeys = 'spring' | 'summer' | 'autumn' | 'winter';
 export class Season {
   private constructor(public value: SeasonKeys) {}
   public static of(value: SeasonKeys): Season {
-    assertOk(!!value);
+    assertOk(!!value, 'Season should not be null');
     return new Season(value);
   }
 }

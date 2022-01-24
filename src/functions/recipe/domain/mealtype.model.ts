@@ -14,7 +14,7 @@ export class MealType {
   private constructor(public value: MealTypes | MealTypesSearch) {}
 
   public static of(value: MealTypes | MealTypesSearch): MealType {
-    assertOk(!!value);
+    assertOk(!!value, 'MealType should not be null');
     return new MealType(value);
   }
 
