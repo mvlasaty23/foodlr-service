@@ -1,6 +1,6 @@
 import RecipeService from '@functions/recipe/control/recipe.service';
 import { Name } from '@functions/recipe/domain/recipe.model';
-import { Region } from '@functions/recipe/domain/region.model';
+import { Region, RegionKeys } from '@functions/recipe/domain/region.model';
 import { RecipeRespository } from '@functions/recipe/entity/recipe.repository';
 import { APIGatewayProxyHandler, responseOK } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
@@ -15,7 +15,10 @@ const recipeService = new RecipeService(new RecipeRespository(dbClient, process.
 export const delete$: APIGatewayProxyHandler = async (event) => {
   return firstValueFrom(
     recipeService
-      .delete$({ region: Region.of(event.pathParameters.region), name: Name.of(event.pathParameters.name) })
+      .delete$({
+        region: Region.of(event.pathParameters.region as RegionKeys),
+        name: Name.of(event.pathParameters.name),
+      })
       .pipe(map(() => responseOK())),
   );
 };

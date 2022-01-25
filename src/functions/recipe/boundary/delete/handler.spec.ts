@@ -23,14 +23,14 @@ describe('Recipe Delete Handler', () => {
     mockDelete$.mockReturnValue(of(true));
     const request: Partial<APIGatewayProxyEvent> = {
       pathParameters: {
-        region: 'region',
+        region: 'eu-central',
         name: 'name',
       },
     };
     // When
     const response = handler(request as APIGatewayProxyEvent, null, null);
     return (response as Promise<APIGatewayProxyResult>).then((res) => {
-      expect(mockDelete$).toHaveBeenCalledWith({ region: Region.of('region'), name: Name.of('name') });
+      expect(mockDelete$).toHaveBeenCalledWith({ region: Region.of('eu-central'), name: Name.of('name') });
       expect(res.statusCode).toBe(200);
       expect(res.body).toBeFalsy();
     });

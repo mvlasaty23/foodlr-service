@@ -1,11 +1,11 @@
+import { CostType } from '@functions/recipe/domain/cost.model';
+import { Duration, DurationType } from '@functions/recipe/domain/duration.model';
+import { MealType, mealTypes } from '@functions/recipe/domain/mealtype.model';
+import { costs, seasons } from '@functions/recipe/domain/mock.model';
+import { IRecipe, Name, Servings } from '@functions/recipe/domain/recipe.model';
+import { Region } from '@functions/recipe/domain/region.model';
 import { AssertionError } from 'assert';
-import { costs, CostType } from './cost.model';
-import { Duration, DurationType } from './duration.model';
-import { MealType, mealTypes } from './mealtype.model';
 import { ConsumerHabbits, MenuPlanBuilder } from './menuplan.model';
-import { IRecipe, Name, Servings } from './recipe.model';
-import { Region } from './region.model';
-import { seasons } from './season.model';
 
 describe('MenuPlanBuilder', () => {
   describe('build', () => {
@@ -25,14 +25,14 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(2),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('meat'),
         },
       ];
       // When
       const menuPlan = new MenuPlanBuilder(recipes)
         .withHabbits(habbits)
-        .forPeriod(new Date('01/01/2021'), new Date('01/15/2021'));
+        .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'));
       // Then
       expect(menuPlan).toBeTruthy();
     });
@@ -48,7 +48,7 @@ describe('MenuPlanBuilder', () => {
             preparationTime: Duration.of(2),
             servings: Servings.of(2),
             region: Region.of('eu-central'),
-            season: seasons.summer,
+            season: seasons.winter,
             type: MealType.of('meat'),
           },
         ]).build(),
@@ -64,7 +64,7 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(2),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('meat'),
         },
         {
@@ -74,7 +74,7 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(2),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('meat'),
         },
         {
@@ -84,7 +84,7 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(2),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('meat'),
         },
       ];
@@ -97,7 +97,7 @@ describe('MenuPlanBuilder', () => {
       // When
       const menuPlan = new MenuPlanBuilder(recipes)
         .withHabbits(habbits)
-        .forPeriod(new Date('01/01/2021'), new Date('01/02/2021'))
+        .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'))
         .build();
       // Then
       expect(
@@ -118,7 +118,7 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(12),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('meat'),
         },
         {
@@ -128,7 +128,7 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(13),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('meat'),
         },
         {
@@ -138,7 +138,7 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(120),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('meat'),
         },
         {
@@ -148,7 +148,7 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(200),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('meat'),
         },
       ];
@@ -161,7 +161,7 @@ describe('MenuPlanBuilder', () => {
       // When
       const menuPlan = new MenuPlanBuilder(recipes)
         .withHabbits(habbits)
-        .forPeriod(new Date('01/01/2021'), new Date('01/02/2021'))
+        .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'))
         .build();
       // Then
       expect(
@@ -182,7 +182,7 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(12),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('meat'),
         },
         {
@@ -192,7 +192,7 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(13),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('vegetarian'),
         },
         {
@@ -202,7 +202,7 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(120),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('pescetarian'),
         },
         {
@@ -212,7 +212,7 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(200),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('vegan'),
         },
       ];
@@ -225,7 +225,7 @@ describe('MenuPlanBuilder', () => {
       // When
       const menuPlan = new MenuPlanBuilder(recipes)
         .withHabbits(habbits)
-        .forPeriod(new Date('01/01/2021'), new Date('01/02/2021'))
+        .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'))
         .build();
       // Then
       expect(
@@ -244,7 +244,7 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(2),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('meat'),
         },
         {
@@ -254,7 +254,7 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(2),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('meat'),
         },
         {
@@ -264,7 +264,7 @@ describe('MenuPlanBuilder', () => {
           preparationTime: Duration.of(2),
           servings: Servings.of(2),
           region: Region.of('eu-central'),
-          season: seasons.summer,
+          season: seasons.winter,
           type: MealType.of('meat'),
         },
       ];
@@ -278,10 +278,58 @@ describe('MenuPlanBuilder', () => {
       // When
       const menuPlan = new MenuPlanBuilder(recipes)
         .withHabbits(habbits)
-        .forPeriod(new Date('01/01/2021'), new Date('01/02/2021'))
+        .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'))
         .build();
       // Then
       expect(menuPlan.recipes).toHaveLength(mealsPerDay);
+    });
+    it('should consider season of start and end', () => {
+      // Given
+      const recipes: IRecipe[] = [
+        {
+          name: Name.of('A'),
+          costs: costs.MODERATE,
+          ingredients: [],
+          preparationTime: Duration.of(2),
+          servings: Servings.of(2),
+          region: Region.of('eu-central'),
+          season: seasons.summer,
+          type: MealType.of('meat'),
+        },
+        {
+          name: Name.of('B'),
+          costs: costs.MODERATE,
+          ingredients: [],
+          preparationTime: Duration.of(2),
+          servings: Servings.of(2),
+          region: Region.of('eu-central'),
+          season: seasons.autumn,
+          type: MealType.of('meat'),
+        },
+        {
+          name: Name.of('C'),
+          costs: costs.MODERATE,
+          ingredients: [],
+          preparationTime: Duration.of(2),
+          servings: Servings.of(2),
+          region: Region.of('eu-central'),
+          season: seasons.winter,
+          type: MealType.of('meat'),
+        },
+      ];
+      const mealsPerDay = 2;
+      const habbits = new ConsumerHabbits(mealsPerDay, [MealType.of('all')], [DurationType.FAST], [CostType.MODERATE]);
+      // When
+      const menuPlan = new MenuPlanBuilder(recipes)
+        .withHabbits(habbits)
+        .forPeriod(new Date('2021-09-21'), new Date('2021-09-22'))
+        .build();
+      // Then
+      expect(
+        menuPlan.recipes.every(
+          (recipe) => recipe.season.equals(seasons.autumn) || recipe.season.equals(seasons.summer),
+        ),
+      ).toBeTruthy();
     });
   });
   describe('withHabbits', () => {

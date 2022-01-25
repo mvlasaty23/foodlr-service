@@ -30,17 +30,9 @@ export class Season {
     if (!that || !that.value) {
       return false;
     }
-    if (that.value === 'all') {
+    if (this.value === 'all') {
       return true;
     }
     return this.value === that.value;
   }
 }
-
-export const seasons: { [k in SeasonKeys]: Season } = {
-  spring: Season.of('spring'),
-  summer: Season.of('summer'),
-  autumn: Season.of('autumn'),
-  winter: Season.of('winter'),
-  all: Season.of('all'),
-} as const;

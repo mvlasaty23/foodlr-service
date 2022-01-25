@@ -21,19 +21,19 @@ describe('Recipe Find One Handler', () => {
   it('should find a recipe by id', () => {
     // Given
     mockFind$.mockReturnValue(
-      of(Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region')),
+      of(Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'eu-central')),
     );
     const request: Partial<APIGatewayProxyEvent> = {
       pathParameters: {
         name: 'name',
-        region: 'region',
+        region: 'eu-central',
       },
     };
     // When
     const response = handler(request as APIGatewayProxyEvent, null, null);
     // Then
     return (response as Promise<APIGatewayProxyResult>).then((res) => {
-      expect(mockFind$).toHaveBeenCalledWith({ region: Region.of('region'), name: Name.of('name') });
+      expect(mockFind$).toHaveBeenCalledWith({ region: Region.of('eu-central'), name: Name.of('name') });
       expect(res).toStrictEqual({
         statusCode: 200,
         body: JSON.stringify({
@@ -49,7 +49,7 @@ describe('Recipe Find One Handler', () => {
           preparationTime: 2,
           season: 'season',
           costs: 2,
-          region: 'region',
+          region: 'eu-central',
         }),
       });
     });

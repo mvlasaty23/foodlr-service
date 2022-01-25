@@ -55,7 +55,7 @@ describe('Season', () => {
       { actual: Season.of('autumn'), that: Season.of('autumn'), expected: true },
       { actual: Season.of('autumn'), that: Season.of('summer'), expected: false },
       { actual: Season.of('autumn'), that: null, expected: false },
-      { actual: Season.of('autumn'), that: Season.of('all'), expected: true },
+      { actual: Season.of('all'), that: Season.of('autumn'), expected: true },
     ].forEach(({ actual, that, expected }) => {
       it(`should return ${expected.toString()} for ${actual.value} == ${that ? that.value : 'null'}`, () =>
         expect(actual.equals(that)).toEqual(expected));

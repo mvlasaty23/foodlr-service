@@ -1,8 +1,9 @@
+import { MealType } from '@functions/recipe/domain//mealtype.model';
+import { CostType } from '@functions/recipe/domain/cost.model';
+import { DurationType } from '@functions/recipe/domain/duration.model';
+import { IRecipe } from '@functions/recipe/domain/recipe.model';
+import { Season } from '@functions/recipe/domain/season.model';
 import { ok as assertOk } from 'assert';
-import { CostType } from './cost.model';
-import { DurationType } from './duration.model';
-import { MealType } from './mealtype.model';
-import { IRecipe } from './recipe.model';
 
 export class ConsumerHabbits {
   constructor(
@@ -21,6 +22,7 @@ export class MenuPlanBuilder {
   private habbits: ConsumerHabbits;
   private startDay: Date;
   private endDay: Date;
+  private seasons: Season[];
 
   constructor(private recipes: IRecipe[]) {}
 
@@ -36,6 +38,7 @@ export class MenuPlanBuilder {
 
     this.startDay = start;
     this.endDay = end;
+    this.seasons = [Season.from(start), Season.from(end)].filter((season, idx, self) => self.indexOf(season) === idx);
     return this;
   }
 
@@ -43,6 +46,7 @@ export class MenuPlanBuilder {
     this.validate();
 
     const eligbaleRecipes = this.recipes
+      .filter(this.bySeasons(this.seasons))
       .filter(this.byMealTypes(this.habbits.mealTypes))
       .filter(this.byPreferredCosts(this.habbits.preferredCosts))
       .filter(this.byPreferredPrepTime(this.habbits.preferredPrepTime));
@@ -55,6 +59,9 @@ export class MenuPlanBuilder {
     return new MenuPlan(recipes, this.startDay, this.endDay);
   }
 
+  private bySeasons(seasons: Season[]) {
+    return (recipe: IRecipe) => seasons.some((season) => recipe.season.equals(season));
+  }
   private byMealTypes(mealTypes: MealType[]) {
     return (recipe: IRecipe) => mealTypes.some((type) => recipe.type.equals(type));
   }
@@ -70,11 +77,15 @@ export class MenuPlanBuilder {
   private periodInDays(): number {
     return Math.abs((this.startDay.getTime() - this.endDay.getTime()) / (1000 * 3600 * 24));
   }
+  // TODO: add deduplication
   private randomFrom(recipes: IRecipe[]): IRecipe {
     return recipes[Math.floor(Math.random() * recipes.length)];
   }
   private validate(): void {
     assertOk(!!this.recipes && this.recipes.length > 0, 'Recipes should not be null or empty');
-    assertOk(!!this.habbits && !!this.startDay && !!this.endDay, 'Mandatory properties should not be null');
+    assertOk(
+      !!this.habbits && !!this.startDay && !!this.endDay && !!this.seasons,
+      'Mandatory properties should not be null',
+    );
   }
 }

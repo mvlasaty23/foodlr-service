@@ -27,9 +27,3 @@ export class Cost {
     }
   }
 }
-
-export const costs: { [k in keyof typeof CostType]: Cost } = {
-  LOW: Cost.of(19),
-  MODERATE: Cost.of(39),
-  EXPENSIVE: Cost.of(41),
-} as const;
