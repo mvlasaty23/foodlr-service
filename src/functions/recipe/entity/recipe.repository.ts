@@ -2,6 +2,7 @@ import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RecipeIdentity } from '../control/recipe.service';
 import { Recipe } from '../domain/recipe.model';
+import { Region } from '../domain/region.model';
 import { RecipeEntity } from './recipe.entity';
 
 export class RecipeRespository {
@@ -38,5 +39,22 @@ export class RecipeRespository {
         })
         .promise(),
     ).pipe(map(() => true));
+  }
+
+  public findByRegion$(region: Region): Observable<Recipe[]> {
+    return from(
+      this.db
+        .query({
+          TableName: this.table,
+          KeyConditionExpression: '#rg = :val',
+          ExpressionAttributeNames: {
+            '#rg': 'region',
+          },
+          ExpressionAttributeValues: {
+            ':val': region.value,
+          },
+        })
+        .promise(),
+    ).pipe(map((result) => result.Items.map((item) => RecipeEntity.of(item).toDomain())));
   }
 }

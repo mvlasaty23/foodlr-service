@@ -11,6 +11,7 @@ describe('RecipeRepository', () => {
     get: jest.fn(),
     put: jest.fn(),
     delete: jest.fn(),
+    query: jest.fn(),
   };
   const service = new RecipeRespository(mockClient as DocumentClient, mockTable);
 
@@ -28,30 +29,29 @@ describe('RecipeRepository', () => {
               preparationTime: { value: 2 },
               season: 'season',
               costs: 2,
-              region: 'region',
+              region: 'eu-central',
             },
           }),
       });
       // When
       return firstValueFrom(
-        service.find$({ region: Region.of('region'), name: Name.of('name') }).pipe(
+        service.find$({ region: Region.of('eu-central'), name: Name.of('name') }).pipe(
           map((recipe) => {
             // Then
             expect(recipe).toBeTruthy();
             expect(mockClient.get).toHaveBeenCalledWith({
               TableName: mockTable,
-              Key: { region: 'region', name: 'name' },
+              Key: { region: 'eu-central', name: 'name' },
             });
           }),
         ),
       );
     });
   });
-
   describe('save$', () => {
     it('should update a recipe', () => {
       // Given
-      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region');
+      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'eu-central');
       (mockClient.put as jest.Mock).mockReturnValue({
         promise: () =>
           Promise.resolve({
@@ -102,14 +102,56 @@ describe('RecipeRepository', () => {
       });
       // When
       return firstValueFrom(
-        service.delete$({ region: Region.of('region'), name: Name.of('name') }).pipe(
+        service.delete$({ region: Region.of('eu-central'), name: Name.of('name') }).pipe(
           map((recipe) => {
             // Then
             expect(recipe).toBeTruthy();
             expect(mockClient.delete).toHaveBeenCalledWith({
               TableName: mockTable,
-              Key: { region: 'region', name: 'name' },
+              Key: { region: 'eu-central', name: 'name' },
             });
+          }),
+        ),
+      );
+    });
+  });
+  describe('findByRegion$', () => {
+    it('should return a list of recipes', () => {
+      // Given
+      (mockClient.query as jest.Mock).mockReturnValue({
+        promise: () =>
+          Promise.resolve({
+            Items: [
+              {
+                Key: 'recipe',
+                name: 'Burger',
+                servings: 2,
+                ingredients: [{ name: 'name', quantity: 2, uom: 'uom' }],
+                preparationTime: { value: 2 },
+                season: 'season',
+                costs: 2,
+                region: 'eu-central',
+              },
+              {
+                Key: 'recipe',
+                name: 'Burger',
+                servings: 2,
+                ingredients: [{ name: 'name', quantity: 2, uom: 'uom' }],
+                preparationTime: { value: 2 },
+                season: 'season',
+                costs: 2,
+                region: 'eu-central',
+              },
+            ],
+          }),
+      });
+      // When
+      return firstValueFrom(
+        service.findByRegion$(Region.EU_CENTRAL).pipe(
+          map((recipes) => {
+            // Then
+            expect(recipes).toHaveLength(2);
+            expect(mockClient.query).toHaveBeenCalled();
           }),
         ),
       );

@@ -10,6 +10,7 @@ describe('RecipeService', () => {
     find$: jest.fn(),
     save$: jest.fn(),
     delete$: jest.fn(),
+    findByRegion$: jest.fn(),
   };
   const service = new RecipeService(mockRepository as RecipeRespository);
 
@@ -52,10 +53,30 @@ describe('RecipeService', () => {
       (mockRepository.find$ as jest.Mock).mockReturnValue(of(recipe));
       // When
       return firstValueFrom(
-        service.find$({ region: Region.of('region'), name: Name.of('name') }).pipe(
+        service.find$({ region: Region.of('eu-central'), name: Name.of('name') }).pipe(
           map((recipe) => {
             expect(recipe).toStrictEqual(recipe);
             expect(mockRepository.find$).toHaveBeenCalled();
+          }),
+        ),
+      );
+    });
+  });
+  describe('findByRegion$', () => {
+    it('should return a list of recipes', () => {
+      // Given
+      (mockRepository.findByRegion$ as jest.Mock).mockReturnValue(
+        of([
+          Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region'),
+          Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region'),
+        ]),
+      );
+      // When
+      return firstValueFrom(
+        service.findByRegion$(Region.EU_CENTRAL).pipe(
+          map((recipes) => {
+            expect(recipes).toHaveLength(2);
+            expect(mockRepository.findByRegion$).toHaveBeenCalled();
           }),
         ),
       );
@@ -67,7 +88,7 @@ describe('RecipeService', () => {
       (mockRepository.delete$ as jest.Mock).mockReturnValue(of(true));
       // When
       return firstValueFrom(
-        service.delete$({ region: Region.of('region'), name: Name.of('name') }).pipe(
+        service.delete$({ region: Region.of('eu-central'), name: Name.of('name') }).pipe(
           map(() => {
             expect(mockRepository.delete$).toHaveBeenCalled();
           }),

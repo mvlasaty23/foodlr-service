@@ -22,6 +22,10 @@ export default class RecipeService {
     return this.repository.find$(identity);
   }
 
+  public findByRegion$(region: Region): Observable<Recipe[]> {
+    return this.repository.findByRegion$(region);
+  }
+
   public delete$(identity: RecipeIdentity): Observable<boolean> {
     return this.repository.delete$(identity);
   }
