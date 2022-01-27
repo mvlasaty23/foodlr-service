@@ -1,6 +1,6 @@
+import { Name } from '@domain/recipe.model';
+import { Region } from '@domain/region.model';
 import { RecipeIdentity } from '@functions/recipe/control/recipe.service';
-import { Name } from '@functions/recipe/domain/recipe.model';
-import { Region } from '@functions/recipe/domain/region.model';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { Observable, of } from 'rxjs';
 import { delete$ } from './handler';

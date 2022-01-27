@@ -1,7 +1,7 @@
 import { firstValueFrom, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Name, Recipe } from '../domain/recipe.model';
-import { Region } from '../domain/region.model';
+import { Name, Recipe } from '@domain/recipe.model';
+import { Region } from '@domain/region.model';
 import { RecipeRespository } from '../entity/recipe.repository';
 import RecipeService from './recipe.service';
 

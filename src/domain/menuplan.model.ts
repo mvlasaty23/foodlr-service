@@ -1,9 +1,9 @@
-import { MealType } from '@functions/recipe/domain//mealtype.model';
-import { CostType } from '@functions/recipe/domain/cost.model';
-import { DurationType } from '@functions/recipe/domain/duration.model';
-import { IRecipe } from '@functions/recipe/domain/recipe.model';
-import { Season } from '@functions/recipe/domain/season.model';
 import { ok as assertOk } from 'assert';
+import { CostType } from './cost.model';
+import { DurationType } from './duration.model';
+import { MealType } from './mealtype.model';
+import { IRecipe } from './recipe.model';
+import { Season } from './season.model';
 
 export class ConsumerHabbits {
   constructor(

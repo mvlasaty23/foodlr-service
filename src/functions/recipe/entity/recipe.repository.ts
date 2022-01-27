@@ -1,8 +1,8 @@
+import { Recipe } from '@domain/recipe.model';
+import { Region } from '@domain/region.model';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RecipeIdentity } from '../control/recipe.service';
-import { Recipe } from '../domain/recipe.model';
-import { Region } from '../domain/region.model';
 import { RecipeEntity } from './recipe.entity';
 
 export class RecipeRespository {

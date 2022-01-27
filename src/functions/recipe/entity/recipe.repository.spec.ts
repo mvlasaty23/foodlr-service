@@ -1,7 +1,7 @@
+import { Name, Recipe } from '@domain/recipe.model';
+import { Region } from '@domain/region.model';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { firstValueFrom, map } from 'rxjs';
-import { Name, Recipe } from '../domain/recipe.model';
-import { Region } from '../domain/region.model';
 import { RecipeRespository } from './recipe.repository';
 
 describe('RecipeRepository', () => {

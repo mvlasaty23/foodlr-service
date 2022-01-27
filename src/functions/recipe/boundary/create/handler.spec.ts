@@ -1,5 +1,5 @@
+import { Recipe } from '@domain/recipe.model';
 import schema from '@functions/recipe/boundary/dto/recipe.dto.schema';
-import { Recipe } from '@functions/recipe/domain/recipe.model';
 import { ValidatedAPIGatewayProxyEvent } from '@libs/apiGateway';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { Observable, of } from 'rxjs';

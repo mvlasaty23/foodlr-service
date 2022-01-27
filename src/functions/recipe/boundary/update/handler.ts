@@ -1,7 +1,7 @@
+import { Recipe } from '@domain/recipe.model';
 import { mapToRecipeDto } from '@functions/recipe/boundary/common';
 import schema from '@functions/recipe/boundary/dto/recipe.dto.schema';
 import RecipeService from '@functions/recipe/control/recipe.service';
-import { Recipe } from '@functions/recipe/domain/recipe.model';
 import { RecipeRespository } from '@functions/recipe/entity/recipe.repository';
 import { ValidatedEventAPIGatewayProxyHandler } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';

@@ -1,5 +1,5 @@
+import { Recipe } from '@domain/recipe.model';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import { Recipe } from '../domain/recipe.model';
 
 interface IIngredient {
   name: string;

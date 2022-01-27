@@ -8,6 +8,7 @@ module.exports = {
         alias: {
           '@functions': './src/functions',
           '@libs': './src/libs',
+          '@domain': './src/domain',
         },
       },
     ],

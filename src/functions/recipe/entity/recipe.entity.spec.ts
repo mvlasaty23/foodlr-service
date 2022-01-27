@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { Ingredient, Recipe } from '@domain/recipe.model';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import { Ingredient, Recipe } from '../domain/recipe.model';
 import { RecipeEntity } from './recipe.entity';
 
 describe('RecipeEntity', () => {

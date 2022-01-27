@@ -1,4 +1,4 @@
-import { Recipe } from '@functions/recipe/domain/recipe.model';
+import { Recipe } from '@domain/recipe.model';
 import { firstValueFrom, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { mapToRecipeDto } from './common';

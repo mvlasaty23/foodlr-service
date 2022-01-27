@@ -1,9 +1,9 @@
-import { CostType } from '@functions/recipe/domain/cost.model';
-import { Duration, DurationType } from '@functions/recipe/domain/duration.model';
-import { MealType, mealTypes } from '@functions/recipe/domain/mealtype.model';
-import { costs, seasons } from '@functions/recipe/domain/mock.model';
-import { IRecipe, Name, Servings } from '@functions/recipe/domain/recipe.model';
-import { Region } from '@functions/recipe/domain/region.model';
+import { CostType } from './cost.model';
+import { Duration, DurationType } from './duration.model';
+import { MealType, mealTypes } from './mealtype.model';
+import { costs, seasons } from './mock.model';
+import { IRecipe, Name, Servings } from './recipe.model';
+import { Region } from './region.model';
 import { AssertionError } from 'assert';
 import { ConsumerHabbits, MenuPlanBuilder } from './menuplan.model';
 

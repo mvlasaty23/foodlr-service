@@ -1,4 +1,4 @@
-import { Recipe } from '@functions/recipe/domain/recipe.model';
+import { Recipe } from '@domain/recipe.model';
 import { formatJSONResponse } from '@libs/apiGateway';
 import { map } from 'rxjs/operators';
 

@@ -1,5 +1,5 @@
-import { Name, Recipe } from '@functions/recipe/domain/recipe.model';
-import { Region } from '@functions/recipe/domain/region.model';
+import { Name, Recipe } from '@domain/recipe.model';
+import { Region } from '@domain/region.model';
 import { RecipeRespository } from '@functions/recipe/entity/recipe.repository';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
