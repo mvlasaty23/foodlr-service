@@ -10,6 +10,10 @@ export interface RecipeIdentity {
 }
 export default class RecipeService {
   constructor(private repository: RecipeRespository) {}
+  public static of(db: AWS.DynamoDB.DocumentClient, table: string): RecipeService {
+    return new RecipeService(new RecipeRespository(db, table));
+  }
+
   public create$(recipe: Recipe): Observable<Recipe> {
     return this.repository.save$(recipe).pipe(map((it) => it));
   }
