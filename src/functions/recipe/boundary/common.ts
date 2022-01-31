@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 
 export const mapToRecipeDto = map((recipe: Recipe) =>
   formatJSONResponse({
+    identity: recipe.identity.value,
     name: recipe.name.value,
     servings: recipe.servings.value,
     ingredients: recipe.ingredients.map((it) => ({
@@ -15,5 +16,6 @@ export const mapToRecipeDto = map((recipe: Recipe) =>
     season: recipe.season.value,
     costs: recipe.costs.value,
     region: recipe.region.value,
+    type: recipe.type.value,
   }),
 );

@@ -1,7 +1,7 @@
 import { Cost, CostType } from './cost.model';
 import { Duration } from './duration.model';
 import { MealType } from './mealtype.model';
-import { IRecipe, Name, Servings } from './recipe.model';
+import { IRecipe, Name, Recipe, RecipeId, Servings } from './recipe.model';
 import { Region } from './region.model';
 import { Season, SeasonKeys } from './season.model';
 
@@ -19,19 +19,34 @@ export const seasons: { [k in SeasonKeys]: Season } = {
   all: Season.of('all'),
 } as const;
 
-export const recipe = {
-  name: Name.of('A'),
-  costs: costs.MODERATE,
-  ingredients: [],
-  preparationTime: Duration.of(2),
-  servings: Servings.of(2),
-  region: Region.of('eu-central'),
-  season: seasons.all,
-  type: MealType.of('meat'),
-};
+export const name = Name.of('name');
+
+export const newRecipe = Recipe.of({
+  // no id here
+  name: 'name',
+  costs: 2,
+  ingredients: [{ name: 'name', uom: 'g', quantity: 2 }],
+  prepTime: 2,
+  servings: 2,
+  region: 'eu-central',
+  season: 'all',
+  type: 'meat',
+});
+export const recipe = Recipe.of({
+  identity: 'id',
+  name: 'name',
+  costs: 2,
+  ingredients: [{ name: 'name', uom: 'g', quantity: 2 }],
+  prepTime: 2,
+  servings: 2,
+  region: 'eu-central',
+  season: 'all',
+  type: 'meat',
+});
 export const recipes: IRecipe[] = [
   recipe,
   {
+    identity: RecipeId.of('id2'),
     name: Name.of('B'),
     costs: costs.LOW,
     ingredients: [],
@@ -42,6 +57,7 @@ export const recipes: IRecipe[] = [
     type: MealType.of('meat'),
   },
   {
+    identity: RecipeId.of('id3'),
     name: Name.of('C'),
     costs: costs.EXPENSIVE,
     ingredients: [],
@@ -52,6 +68,7 @@ export const recipes: IRecipe[] = [
     type: MealType.of('meat'),
   },
   {
+    identity: RecipeId.of('id4'),
     name: Name.of('D'),
     costs: costs.EXPENSIVE,
     ingredients: [],

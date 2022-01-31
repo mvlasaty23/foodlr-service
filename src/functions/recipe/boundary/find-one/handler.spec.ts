@@ -1,3 +1,4 @@
+import { recipe as MockRecipe } from '@domain/mock.model';
 import { Name, Recipe } from '@domain/recipe.model';
 import { Region } from '@domain/region.model';
 import { RecipeIdentity } from '@functions/recipe/control/recipe.service';
@@ -20,9 +21,7 @@ describe('Recipe Find One Handler', () => {
   const handler = findOne$;
   it('should find a recipe by id', () => {
     // Given
-    mockFind$.mockReturnValue(
-      of(Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'eu-central')),
-    );
+    mockFind$.mockReturnValue(of(MockRecipe));
     const request: Partial<APIGatewayProxyEvent> = {
       pathParameters: {
         name: 'name',
@@ -37,19 +36,21 @@ describe('Recipe Find One Handler', () => {
       expect(res).toStrictEqual({
         statusCode: 200,
         body: JSON.stringify({
+          identity: 'id',
           name: 'name',
           servings: 2,
           ingredients: [
             {
               name: 'name',
               quantity: 2,
-              uom: 'uom',
+              uom: 'g',
             },
           ],
           preparationTime: 2,
-          season: 'season',
+          season: 'all',
           costs: 2,
           region: 'eu-central',
+          type: 'meat',
         }),
       });
     });

@@ -1,4 +1,7 @@
+import { MealTypes } from '@domain/mealtype.model';
 import { Recipe } from '@domain/recipe.model';
+import { RegionKeys } from '@domain/region.model';
+import { SeasonKeys } from '@domain/season.model';
 import { mapToRecipeDto } from '@functions/recipe/boundary/common';
 import schema from '@functions/recipe/boundary/dto/recipe.dto.schema';
 import RecipeService from '@functions/recipe/control/recipe.service';
@@ -12,10 +15,22 @@ const dbClient = new AWS.DynamoDB.DocumentClient();
 const recipeService = new RecipeService(new RecipeRespository(dbClient, process.env.FOODLR_TABLE));
 
 export const update$: ValidatedEventAPIGatewayProxyHandler<typeof schema> = async (event) => {
-  const { name, servings, ingredients, preparationTime, season, costs, region } = event.body;
+  const { identity, name, servings, ingredients, preparationTime, season, costs, region, type } = event.body;
   return firstValueFrom(
     recipeService
-      .update$(Recipe.of(name, servings, ingredients, preparationTime.quantity, season, costs, region))
+      .update$(
+        Recipe.of({
+          identity,
+          name,
+          servings,
+          ingredients,
+          prepTime: preparationTime.quantity,
+          season: season as SeasonKeys,
+          costs,
+          region: region as RegionKeys,
+          type: type as MealTypes,
+        }),
+      )
       .pipe(mapToRecipeDto),
   );
 };

@@ -1,4 +1,4 @@
-import { Name, Recipe } from '@domain/recipe.model';
+import { recipe as MockRecipe, name as MockName } from '@domain/mock.model';
 import { Region } from '@domain/region.model';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { firstValueFrom, map } from 'rxjs';
@@ -30,12 +30,13 @@ describe('RecipeRepository', () => {
               season: 'season',
               costs: 2,
               region: 'eu-central',
+              type: 'all',
             },
           }),
       });
       // When
       return firstValueFrom(
-        service.find$({ region: Region.of('eu-central'), name: Name.of('name') }).pipe(
+        service.find$({ region: Region.of('eu-central'), name: MockName }).pipe(
           map((recipe) => {
             // Then
             expect(recipe).toBeTruthy();
@@ -51,7 +52,7 @@ describe('RecipeRepository', () => {
   describe('save$', () => {
     it('should update a recipe', () => {
       // Given
-      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'eu-central');
+      const recipe = MockRecipe;
       (mockClient.put as jest.Mock).mockReturnValue({
         promise: () =>
           Promise.resolve({
@@ -70,6 +71,7 @@ describe('RecipeRepository', () => {
             expect(mockClient.put).toHaveBeenCalledWith({
               TableName: mockTable,
               Item: {
+                identity: recipe.identity.value,
                 name: recipe.name.value,
                 servings: recipe.servings.value,
                 ingredients: recipe.ingredients.map((it) => ({
@@ -81,6 +83,7 @@ describe('RecipeRepository', () => {
                 season: recipe.season.value,
                 costs: recipe.costs.value,
                 region: recipe.region.value,
+                type: recipe.type.value,
               },
             });
           }),
@@ -102,7 +105,7 @@ describe('RecipeRepository', () => {
       });
       // When
       return firstValueFrom(
-        service.delete$({ region: Region.of('eu-central'), name: Name.of('name') }).pipe(
+        service.delete$({ region: Region.of('eu-central'), name: MockName }).pipe(
           map((recipe) => {
             // Then
             expect(recipe).toBeTruthy();
@@ -131,6 +134,7 @@ describe('RecipeRepository', () => {
                 season: 'season',
                 costs: 2,
                 region: 'eu-central',
+                type: 'all',
               },
               {
                 Key: 'recipe',
@@ -141,6 +145,7 @@ describe('RecipeRepository', () => {
                 season: 'season',
                 costs: 2,
                 region: 'eu-central',
+                type: 'all',
               },
             ],
           }),

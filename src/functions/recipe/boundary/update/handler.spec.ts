@@ -1,3 +1,4 @@
+import { recipe as MockRecipe } from '@domain/mock.model';
 import { Recipe } from '@domain/recipe.model';
 import schema from '@functions/recipe/boundary/dto/recipe.dto.schema';
 import { ValidatedAPIGatewayProxyEvent } from '@libs/apiGateway';
@@ -20,49 +21,49 @@ describe('Recipe Update Handler', () => {
   const handler = update$;
   it('should update a recipe', () => {
     // Given
-    mockUpdate$.mockReturnValue(
-      of(Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region')),
-    );
+    mockUpdate$.mockReturnValue(of(MockRecipe));
     const request: Partial<ValidatedAPIGatewayProxyEvent<typeof schema>> = {
       body: {
+        identity: 'id',
         name: 'name',
         servings: 2,
         ingredients: [
           {
             name: 'name',
             quantity: 2,
-            uom: 'uom',
+            uom: 'g',
           },
         ],
         preparationTime: { quantity: 2, uom: 'uom' },
-        season: 'season',
+        season: 'all',
         costs: 2,
-        region: 'region',
+        region: 'eu-central',
+        type: 'meat',
       },
     };
     // When
     const response = handler(request as ValidatedAPIGatewayProxyEvent<typeof schema>, null, null);
     // Then
     return (response as Promise<APIGatewayProxyResult>).then((res) => {
-      expect(mockUpdate$).toHaveBeenCalledWith(
-        Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region'),
-      );
+      expect(mockUpdate$).toHaveBeenCalledWith(MockRecipe);
       expect(res).toStrictEqual({
         statusCode: 200,
         body: JSON.stringify({
+          identity: 'id',
           name: 'name',
           servings: 2,
           ingredients: [
             {
               name: 'name',
               quantity: 2,
-              uom: 'uom',
+              uom: 'g',
             },
           ],
           preparationTime: 2,
-          season: 'season',
+          season: 'all',
           costs: 2,
-          region: 'region',
+          region: 'eu-central',
+          type: 'meat',
         }),
       });
     });

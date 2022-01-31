@@ -1,3 +1,4 @@
+import { recipe as MockRecipe } from '@domain/mock.model';
 import { Recipe } from '@domain/recipe.model';
 import schema from '@functions/recipe/boundary/dto/recipe.dto.schema';
 import { ValidatedAPIGatewayProxyEvent } from '@libs/apiGateway';
@@ -20,9 +21,7 @@ describe('Recipe Create Handler', () => {
   const handler = create$;
   it('should create a new recipe', () => {
     // Given
-    mockCreate$.mockReturnValue(
-      of(Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region')),
-    );
+    mockCreate$.mockReturnValue(of(MockRecipe));
     const request: Partial<ValidatedAPIGatewayProxyEvent<typeof schema>> = {
       body: {
         name: 'Burger',
@@ -38,6 +37,7 @@ describe('Recipe Create Handler', () => {
         season: 'season',
         costs: 2,
         region: 'region',
+        type: 'meat',
       },
     };
     // When

@@ -36,8 +36,20 @@ export class Ingredient {
   }
 }
 
+export class RecipeId {
+  private constructor(public value?: string) {}
+  public static of(value?: string): RecipeId {
+    return new RecipeId(value);
+  }
+
+  public orElse(defaultValue: string): string {
+    return this.value ? this.value : defaultValue;
+  }
+}
+
 // Aggregate
 export interface IRecipe {
+  identity: RecipeId;
   name: Name;
   servings: Servings;
   ingredients: Ingredient[];
@@ -47,9 +59,14 @@ export interface IRecipe {
   region: Region;
   type: MealType;
 }
+export interface IIngredient {
+  name: string;
+  uom: string;
+  quantity: number;
+}
 export class Recipe implements IRecipe {
   private constructor(
-    // TODO: slug for names
+    public identity: RecipeId,
     public name: Name,
     public servings: Servings,
     public ingredients: Ingredient[],
@@ -60,30 +77,11 @@ export class Recipe implements IRecipe {
     public type: MealType,
   ) {}
 
-  public static of(
-    name: string,
-    servings: number,
-    ingredients: { name: string; uom: string; quantity: number }[],
-    prepTime: number,
-    season: string,
-    costs: number,
-    region: string,
-  ): Recipe {
-    return new Recipe(
-      Name.of(name),
-      Servings.of(servings),
-      ingredients.map(({ name, quantity, uom }) => Ingredient.of(name, uom as UomKey, quantity)),
-      Duration.of(prepTime),
-      Season.of(season as SeasonKeys),
-      Cost.of(costs),
-      Region.of(region as RegionKeys),
-      MealType.of('all'),
-    );
-  }
-  public static ofObj(options: {
+  public static of(options: {
+    identity?: string;
     name: string;
     servings: number;
-    ingredients: { name: string; uom: UomKey; quantity: number }[];
+    ingredients: IIngredient[];
     prepTime: number;
     season: SeasonKeys;
     costs: number;
@@ -91,9 +89,10 @@ export class Recipe implements IRecipe {
     type: MealTypes;
   }): Recipe {
     return new Recipe(
+      RecipeId.of(options.identity),
       Name.of(options.name),
       Servings.of(options.servings),
-      options.ingredients.map(({ name, quantity, uom }) => Ingredient.of(name, uom, quantity)),
+      options.ingredients.map(({ name, quantity, uom }) => Ingredient.of(name, uom as UomKey, quantity)),
       Duration.of(options.prepTime),
       Season.of(options.season),
       Cost.of(options.costs),

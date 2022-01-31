@@ -1,7 +1,8 @@
+import { recipe as MockRecipe } from '@domain/mock.model';
+import { Name } from '@domain/recipe.model';
+import { Region } from '@domain/region.model';
 import { firstValueFrom, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Name, Recipe } from '@domain/recipe.model';
-import { Region } from '@domain/region.model';
 import { RecipeRespository } from '../entity/recipe.repository';
 import RecipeService from './recipe.service';
 
@@ -13,11 +14,11 @@ describe('RecipeService', () => {
     findByRegion$: jest.fn(),
   };
   const service = new RecipeService(mockRepository as RecipeRespository);
+  const recipe = MockRecipe;
 
   describe('create$', () => {
     it('should create a recipe', () => {
       // Given
-      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region');
       (mockRepository.save$ as jest.Mock).mockReturnValue(of(recipe));
       // When
       return firstValueFrom(
@@ -33,7 +34,6 @@ describe('RecipeService', () => {
   describe('update$', () => {
     it('should update a recipe', () => {
       // Given
-      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region');
       (mockRepository.save$ as jest.Mock).mockReturnValue(of(recipe));
       // When
       return firstValueFrom(
@@ -49,7 +49,6 @@ describe('RecipeService', () => {
   describe('find$', () => {
     it('should find a recipe', () => {
       // Given
-      const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region');
       (mockRepository.find$ as jest.Mock).mockReturnValue(of(recipe));
       // When
       return firstValueFrom(
@@ -65,12 +64,7 @@ describe('RecipeService', () => {
   describe('findByRegion$', () => {
     it('should return a list of recipes', () => {
       // Given
-      (mockRepository.findByRegion$ as jest.Mock).mockReturnValue(
-        of([
-          Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region'),
-          Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region'),
-        ]),
-      );
+      (mockRepository.findByRegion$ as jest.Mock).mockReturnValue(of([MockRecipe, MockRecipe]));
       // When
       return firstValueFrom(
         service.findByRegion$(Region.EU_CENTRAL).pipe(

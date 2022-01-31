@@ -1,16 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Ingredient, Recipe } from '@domain/recipe.model';
+import { recipe as MockRecipe, newRecipe as NewMockRecipe } from '@domain/mock.model';
+import { Ingredient } from '@domain/recipe.model';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { RecipeEntity } from './recipe.entity';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockV4 = jest.fn<string, any>();
+jest.mock('uuid', () => ({ v4: jest.fn().mockImplementation(() => mockV4()) }));
+
 describe('RecipeEntity', () => {
+  const recipe = MockRecipe;
+
   it('should construct from domain object recipe', () => {
-    // Given
-    const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region');
     // When
     const entity = RecipeEntity.from(recipe);
     // Then
     expect({ ...entity }).toStrictEqual({
+      identity: recipe.identity.value,
       name: recipe.name.value,
       servings: recipe.servings.value,
       ingredients: recipe.ingredients.map((it) => ({
@@ -22,11 +28,35 @@ describe('RecipeEntity', () => {
       season: recipe.season.value,
       costs: recipe.costs.value,
       region: recipe.region.value,
+      type: recipe.type.value,
+    });
+  });
+  it('should create id from domain object recipe', () => {
+    // Given
+    mockV4.mockReturnValue('id');
+    // When
+    const entity = RecipeEntity.from(NewMockRecipe);
+    // Then
+    expect({ ...entity }).toStrictEqual({
+      identity: recipe.identity.value,
+      name: recipe.name.value,
+      servings: recipe.servings.value,
+      ingredients: recipe.ingredients.map((it) => ({
+        name: it.name.value,
+        uom: it.uom.value,
+        quantity: it.quantity.value,
+      })),
+      preparationTime: { ...recipe.preparationTime },
+      season: recipe.season.value,
+      costs: recipe.costs.value,
+      region: recipe.region.value,
+      type: recipe.type.value,
     });
   });
   it('should construct from DocumentClient.AttributeMap', () => {
     // Given
-    const recipe: DocumentClient.AttributeMap = {
+    const attrMap: DocumentClient.AttributeMap = {
+      identity: 'id',
       name: 'name',
       servings: 2,
       ingredients: [{ name: 'name', quantity: 2, uom: 'uom' }],
@@ -34,25 +64,27 @@ describe('RecipeEntity', () => {
       season: 'season',
       costs: 2,
       region: 'region',
+      type: 'meat',
     };
     // When
-    const entity = RecipeEntity.of(recipe);
+    const entity = RecipeEntity.of(attrMap);
     // Then
     expect({ ...entity }).toStrictEqual({
-      name: recipe.name,
-      servings: recipe.servings,
-      ingredients: (recipe.ingredients as Ingredient[]).map((it) => ({
+      identity: attrMap.identity,
+      name: attrMap.name,
+      servings: attrMap.servings,
+      ingredients: (attrMap.ingredients as Ingredient[]).map((it) => ({
         ...it,
       })),
-      preparationTime: { ...recipe.preparationTime },
-      season: recipe.season,
-      costs: recipe.costs,
-      region: recipe.region,
+      preparationTime: { ...attrMap.preparationTime },
+      season: attrMap.season,
+      costs: attrMap.costs,
+      region: attrMap.region,
+      type: attrMap.type,
     });
   });
   it('should transform to a domain object recipe', () => {
     // Given
-    const recipe = Recipe.of('name', 2, [{ name: 'name', quantity: 2, uom: 'uom' }], 2, 'season', 2, 'region');
     const entity = RecipeEntity.from(recipe);
     // When
     const recipe2 = entity.toDomain();
