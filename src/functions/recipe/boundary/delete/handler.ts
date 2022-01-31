@@ -1,5 +1,4 @@
-import { Name } from '@domain/recipe.model';
-import { Region, RegionKeys } from '@domain/region.model';
+import { RecipeId } from '@domain/recipe.model';
 import RecipeService from '@functions/recipe/control/recipe.service';
 import { RecipeRespository } from '@functions/recipe/entity/recipe.repository';
 import { APIGatewayProxyHandler, responseOK } from '@libs/apiGateway';
@@ -16,8 +15,7 @@ export const delete$: APIGatewayProxyHandler = async (event) => {
   return firstValueFrom(
     recipeService
       .delete$({
-        region: Region.of(event.pathParameters.region as RegionKeys),
-        name: Name.of(event.pathParameters.name),
+        identity: RecipeId.of(event.pathParameters.id),
       })
       .pipe(map(() => responseOK())),
   );

@@ -1,12 +1,11 @@
-import { Name, Recipe } from '@domain/recipe.model';
+import { Recipe, RecipeId } from '@domain/recipe.model';
 import { Region } from '@domain/region.model';
 import { RecipeRespository } from '@functions/recipe/entity/recipe.repository';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-export interface RecipeIdentity {
-  region: Region;
-  name: Name;
+export interface IRecipeIdentity {
+  identity: RecipeId;
 }
 export default class RecipeService {
   constructor(private repository: RecipeRespository) {}
@@ -22,7 +21,7 @@ export default class RecipeService {
     return this.repository.save$(recipe);
   }
 
-  public find$(identity: RecipeIdentity): Observable<Recipe> {
+  public find$(identity: IRecipeIdentity): Observable<Recipe> {
     return this.repository.find$(identity);
   }
 
@@ -30,7 +29,7 @@ export default class RecipeService {
     return this.repository.findByRegion$(region);
   }
 
-  public delete$(identity: RecipeIdentity): Observable<boolean> {
+  public delete$(identity: IRecipeIdentity): Observable<boolean> {
     return this.repository.delete$(identity);
   }
 }

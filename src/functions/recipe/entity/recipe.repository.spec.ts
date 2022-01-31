@@ -1,4 +1,4 @@
-import { recipe as MockRecipe, name as MockName } from '@domain/mock.model';
+import { recipe as MockRecipe, recipeId as MockRecipeId } from '@domain/mock.model';
 import { Region } from '@domain/region.model';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { firstValueFrom, map } from 'rxjs';
@@ -36,13 +36,13 @@ describe('RecipeRepository', () => {
       });
       // When
       return firstValueFrom(
-        service.find$({ region: Region.of('eu-central'), name: MockName }).pipe(
+        service.find$({ identity: MockRecipeId }).pipe(
           map((recipe) => {
             // Then
             expect(recipe).toBeTruthy();
             expect(mockClient.get).toHaveBeenCalledWith({
               TableName: mockTable,
-              Key: { region: 'eu-central', name: 'name' },
+              Key: { identity: 'id' },
             });
           }),
         ),
@@ -105,13 +105,13 @@ describe('RecipeRepository', () => {
       });
       // When
       return firstValueFrom(
-        service.delete$({ region: Region.of('eu-central'), name: MockName }).pipe(
+        service.delete$({ identity: MockRecipeId }).pipe(
           map((recipe) => {
             // Then
             expect(recipe).toBeTruthy();
             expect(mockClient.delete).toHaveBeenCalledWith({
               TableName: mockTable,
-              Key: { region: 'eu-central', name: 'name' },
+              Key: { identity: 'id' },
             });
           }),
         ),

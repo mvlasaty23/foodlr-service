@@ -1,6 +1,5 @@
-import { Name } from '@domain/recipe.model';
-import { Region } from '@domain/region.model';
-import { RecipeIdentity } from '@functions/recipe/control/recipe.service';
+import { recipeId as MockRecipeId } from '@domain/mock.model';
+import { IRecipeIdentity } from '@functions/recipe/control/recipe.service';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { Observable, of } from 'rxjs';
 import { delete$ } from './handler';
@@ -12,7 +11,7 @@ jest.mock('aws-sdk');
 jest.mock('@functions/recipe/entity/recipe.repository');
 jest.mock('@functions/recipe/control/recipe.service', () =>
   jest.fn().mockImplementation(() => ({
-    delete$: (deleteAction: RecipeIdentity) => mockDelete$(deleteAction),
+    delete$: (deleteAction: IRecipeIdentity) => mockDelete$(deleteAction),
   })),
 );
 
@@ -23,14 +22,13 @@ describe('Recipe Delete Handler', () => {
     mockDelete$.mockReturnValue(of(true));
     const request: Partial<APIGatewayProxyEvent> = {
       pathParameters: {
-        region: 'eu-central',
-        name: 'name',
+        id: 'id',
       },
     };
     // When
     const response = handler(request as APIGatewayProxyEvent, null, null);
     return (response as Promise<APIGatewayProxyResult>).then((res) => {
-      expect(mockDelete$).toHaveBeenCalledWith({ region: Region.of('eu-central'), name: Name.of('name') });
+      expect(mockDelete$).toHaveBeenCalledWith({ identity: MockRecipeId });
       expect(res.statusCode).toBe(200);
       expect(res.body).toBeFalsy();
     });

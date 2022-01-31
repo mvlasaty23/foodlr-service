@@ -21,6 +21,8 @@ export const seasons: { [k in SeasonKeys]: Season } = {
 
 export const name = Name.of('name');
 
+export const recipeId = RecipeId.of('id');
+
 export const newRecipe = Recipe.of({
   // no id here
   name: 'name',
