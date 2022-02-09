@@ -1,9 +1,9 @@
 export default {
-  FoodlrTable: {
+  RecipeTable: {
     Type: 'AWS::DynamoDB::Table',
     DeletionPolicy: 'Retain',
     Properties: {
-      TableName: '${self:provider.environment.FOODLR_TABLE}',
+      TableName: '${self:provider.environment.RECIPE_TABLE}',
       AttributeDefinitions: [
         { AttributeName: 'identity', AttributeType: 'S' },
         { AttributeName: 'name', AttributeType: 'S' },

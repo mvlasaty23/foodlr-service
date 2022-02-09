@@ -2,6 +2,8 @@ import { Recipe } from '@domain/recipe.model';
 import { formatJSONResponse } from '@libs/apiGateway';
 import { map } from 'rxjs/operators';
 
+export const table = process.env.RECIPE_TABLE;
+
 export const mapToRecipeDto = map((recipe: Recipe) =>
   formatJSONResponse({
     identity: recipe.identity.value,

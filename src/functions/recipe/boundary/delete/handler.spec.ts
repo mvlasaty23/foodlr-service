@@ -9,11 +9,11 @@ const mockDelete$ = jest.fn<Observable<boolean>, any>();
 
 jest.mock('aws-sdk');
 jest.mock('@functions/recipe/entity/recipe.repository');
-jest.mock('@functions/recipe/control/recipe.service', () =>
-  jest.fn().mockImplementation(() => ({
+jest.mock('@functions/recipe/control/recipe.service', () => ({
+  of: jest.fn().mockImplementation(() => ({
     delete$: (deleteAction: IRecipeIdentity) => mockDelete$(deleteAction),
   })),
-);
+}));
 
 describe('Recipe Delete Handler', () => {
   const handler = delete$;

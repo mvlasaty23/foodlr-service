@@ -11,11 +11,11 @@ const mockCreate$ = jest.fn<Observable<Recipe>, any>();
 
 jest.mock('aws-sdk');
 jest.mock('@functions/recipe/entity/recipe.repository');
-jest.mock('@functions/recipe/control/recipe.service', () =>
-  jest.fn().mockImplementation(() => ({
+jest.mock('@functions/recipe/control/recipe.service', () => ({
+  of: jest.fn().mockImplementation(() => ({
     create$: () => mockCreate$(),
   })),
-);
+}));
 
 describe('Recipe Create Handler', () => {
   const handler = create$;

@@ -11,11 +11,11 @@ const mockUpdate$ = jest.fn<Observable<Recipe>, any>();
 
 jest.mock('aws-sdk');
 jest.mock('@functions/recipe/entity/recipe.repository');
-jest.mock('@functions/recipe/control/recipe.service', () =>
-  jest.fn().mockImplementation(() => ({
+jest.mock('@functions/recipe/control/recipe.service', () => ({
+  of: jest.fn().mockImplementation(() => ({
     update$: (recipe: Recipe) => mockUpdate$(recipe),
   })),
-);
+}));
 
 describe('Recipe Update Handler', () => {
   const handler = update$;
