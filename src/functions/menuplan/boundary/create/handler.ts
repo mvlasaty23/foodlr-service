@@ -6,17 +6,18 @@ import schema from '@functions/menuplan/boundary/dto/create.dto.schema';
 import MenuPlanService from '@functions/menuplan/control/menuplan.service';
 import { MenuplanRepository } from '@functions/menuplan/entity/menuplan.repository';
 import { RecipeFacade } from '@functions/recipe/api/recipe.facade';
+import { table as recipeTable } from '@functions/recipe/boundary/common';
 import { formatJSONResponse, ValidatedEventAPIGatewayProxyHandler } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import 'source-map-support/register';
-import { table } from '../common';
+import { menuplanTable } from '../common';
 
 const dbClient = new AWS.DynamoDB.DocumentClient();
 const menuPlanService = new MenuPlanService(
-  new RecipeFacade(dbClient, process.env.FOODLR_TABLE),
-  new MenuplanRepository(dbClient, table),
+  new RecipeFacade(dbClient, recipeTable),
+  new MenuplanRepository(dbClient, menuplanTable),
 );
 
 export const createMenuPlan$: ValidatedEventAPIGatewayProxyHandler<typeof schema> = async (event) => {

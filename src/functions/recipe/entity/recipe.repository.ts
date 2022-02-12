@@ -20,14 +20,15 @@ export class RecipeRespository {
   }
 
   public save$(recipe: Recipe): Observable<Recipe> {
+    const recipeEntity = RecipeEntity.from(recipe);
     return from(
       this.db
         .put({
           TableName: this.table,
-          Item: { ...RecipeEntity.from(recipe) },
+          Item: { ...recipeEntity },
         })
         .promise(),
-    ).pipe(map(() => recipe));
+    ).pipe(map(() => recipeEntity.toDomain()));
   }
 
   public delete$({ identity }: IRecipeIdentity): Observable<boolean> {
@@ -46,6 +47,7 @@ export class RecipeRespository {
       this.db
         .query({
           TableName: this.table,
+          IndexName: 'RegionIndex',
           KeyConditionExpression: '#rg = :val',
           ExpressionAttributeNames: {
             '#rg': 'region',

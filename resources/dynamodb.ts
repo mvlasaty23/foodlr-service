@@ -24,6 +24,12 @@ export default {
           Projection: {
             ProjectionType: 'ALL',
           },
+          ProvisionedThroughput: {
+            ReadCapacityUnits:
+              '${self:custom.table_throughputs.${self:custom.stage}, self:custom.table_throughputs.default}',
+            WriteCapacityUnits:
+              '${self:custom.table_throughputs.${self:custom.stage}, self:custom.table_throughputs.default}',
+          },
         },
       ],
       ProvisionedThroughput: {

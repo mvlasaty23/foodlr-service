@@ -95,7 +95,10 @@ const serverlessConfiguration: AWS = {
               'dynamodb:UpdateItem',
               'dynamodb:DeleteItem',
             ],
-            Resource: [{ 'Fn::GetAtt': ['RecipeTable', 'Arn'] }],
+            Resource: [
+              { 'Fn::GetAtt': ['RecipeTable', 'Arn'] },
+              { 'Fn::Join': ['/', [{ 'Fn::GetAtt': ['RecipeTable', 'Arn'] }, 'index/*']] },
+            ],
           },
           {
             Effect: 'Allow',

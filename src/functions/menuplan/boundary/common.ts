@@ -1,1 +1,1 @@
-export const table = process.env.MENUPLAN_TABLE;
+export const menuplanTable = process.env.MENUPLAN_TABLE;
