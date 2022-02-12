@@ -19,7 +19,7 @@ describe('Create Menuplan Handler', () => {
   it('should create a new menuplan', () => {
     // Given
     mockGenerateMenuPlan$.mockReturnValue(
-      Promise.resolve(new MenuPlan([], new Date('2021-01-01'), new Date('2021-01-06'))),
+      Promise.resolve(new MenuPlan('mock-user', [], new Date('2021-01-01'), new Date('2021-01-06'))),
     );
     const request: Partial<ValidatedAPIGatewayProxyEvent<typeof schema>> = {
       body: {
@@ -34,6 +34,7 @@ describe('Create Menuplan Handler', () => {
           types: ['all'],
         },
       },
+      headers: { 'x-user-id': 'mock-user' },
     };
     // When
     const response = handler(request as ValidatedAPIGatewayProxyEvent<typeof schema>, null, null);

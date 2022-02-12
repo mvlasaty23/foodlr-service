@@ -15,7 +15,7 @@ export class ConsumerHabbits {
 }
 
 export class MenuPlan {
-  constructor(public recipes: IRecipe[], public startDay: Date, public endDay: Date) {}
+  constructor(public user: string, public recipes: IRecipe[], public startDay: Date, public endDay: Date) {}
 }
 
 export class MenuPlanBuilder {
@@ -24,7 +24,7 @@ export class MenuPlanBuilder {
   private endDay: Date;
   private seasons: Season[];
 
-  constructor(private recipes: IRecipe[]) {}
+  constructor(private user: string, private recipes: IRecipe[]) {}
 
   public withHabbits(habbits: ConsumerHabbits): MenuPlanBuilder {
     assertOk(!!habbits, 'Consumer Habbits should not be null');
@@ -56,7 +56,7 @@ export class MenuPlanBuilder {
       recipes.push(this.randomFrom(eligbaleRecipes));
     }
 
-    return new MenuPlan(recipes, this.startDay, this.endDay);
+    return new MenuPlan(this.user, recipes, this.startDay, this.endDay);
   }
 
   private bySeasons(seasons: Season[]) {
@@ -83,6 +83,7 @@ export class MenuPlanBuilder {
   }
   private validate(): void {
     assertOk(!!this.recipes && this.recipes.length > 0, 'Recipes should not be null or empty');
+    assertOk(!!this.user, 'User should not be null');
     assertOk(
       !!this.habbits && !!this.startDay && !!this.endDay && !!this.seasons,
       'Mandatory properties should not be null',

@@ -19,6 +19,7 @@ describe('MenuPlanService', () => {
       // When
       return service
         .generateMenuPlan$({
+          user: 'mock-user',
           period: {
             start: new Date('2021-01-01'),
             end: new Date('2021-01-07'),

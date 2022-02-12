@@ -16,8 +16,10 @@ const menuPlanService = new MenuPlanService(new RecipeFacade(dbClient, process.e
 
 export const createMenuPlan$: ValidatedEventAPIGatewayProxyHandler<typeof schema> = async (event) => {
   const { habbits, period } = event.body;
+  const user = event.headers['x-user-id'];
   return menuPlanService
     .generateMenuPlan$({
+      user,
       habbits: new ConsumerHabbits(
         habbits.mealsPerDay,
         habbits.types.map((type) => MealType.of(type as MealTypes)),

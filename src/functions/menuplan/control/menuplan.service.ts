@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { ConsumerHabbits, MenuPlan, MenuPlanBuilder } from '@domain/menuplan.model';
 
 export interface IMenuPlanCreationCommand {
+  user: string;
   habbits: ConsumerHabbits;
   period: {
     start: Date;
@@ -21,7 +22,7 @@ export default class MenuPlanService {
         .findByRegion$(Region.of('eu-central'))
         .pipe(
           map((recipes) =>
-            new MenuPlanBuilder(recipes)
+            new MenuPlanBuilder(command.user, recipes)
               .forPeriod(command.period.start, command.period.end)
               .withHabbits(command.habbits)
               .build(),

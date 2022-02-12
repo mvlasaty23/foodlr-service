@@ -1,11 +1,11 @@
+import { AssertionError } from 'assert';
 import { CostType } from './cost.model';
 import { Duration, DurationType } from './duration.model';
 import { MealType, mealTypes } from './mealtype.model';
-import { costs, seasons } from './mock.model';
-import { IRecipe, Name, Servings } from './recipe.model';
-import { Region } from './region.model';
-import { AssertionError } from 'assert';
 import { ConsumerHabbits, MenuPlanBuilder } from './menuplan.model';
+import { costs, recipe, seasons } from './mock.model';
+import { IRecipe, Name, RecipeId, Servings } from './recipe.model';
+import { Region } from './region.model';
 
 describe('MenuPlanBuilder', () => {
   describe('build', () => {
@@ -17,47 +17,26 @@ describe('MenuPlanBuilder', () => {
         [DurationType.FAST, DurationType.MODERATE],
         [CostType.LOW, CostType.MODERATE],
       );
-      const recipes: IRecipe[] = [
-        {
-          name: Name.of('A'),
-          costs: costs.MODERATE,
-          ingredients: [],
-          preparationTime: Duration.of(2),
-          servings: Servings.of(2),
-          region: Region.of('eu-central'),
-          season: seasons.winter,
-          type: MealType.of('meat'),
-        },
-      ];
+      const recipes: IRecipe[] = [recipe];
       // When
-      const menuPlan = new MenuPlanBuilder(recipes)
+      const menuPlan = new MenuPlanBuilder('mock-user', recipes)
         .withHabbits(habbits)
         .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'));
       // Then
       expect(menuPlan).toBeTruthy();
     });
     it('should validate input', () => {
-      expect(() => new MenuPlanBuilder([]).build()).toThrow(AssertionError);
-      expect(() => new MenuPlanBuilder(null).build()).toThrow(AssertionError);
-      expect(() =>
-        new MenuPlanBuilder([
-          {
-            name: Name.of('A'),
-            costs: costs.MODERATE,
-            ingredients: [],
-            preparationTime: Duration.of(2),
-            servings: Servings.of(2),
-            region: Region.of('eu-central'),
-            season: seasons.winter,
-            type: MealType.of('meat'),
-          },
-        ]).build(),
-      ).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder('mock-user', []).build()).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder('mock-user', null).build()).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder('', [recipe]).build()).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder(null, [recipe]).build()).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder('mock-user', [recipe]).build()).toThrow(AssertionError);
     });
     it('should consider preferred costs', () => {
       // Given
       const recipes: IRecipe[] = [
         {
+          identity: RecipeId.of('1'),
           name: Name.of('A'),
           costs: costs.MODERATE,
           ingredients: [],
@@ -68,6 +47,7 @@ describe('MenuPlanBuilder', () => {
           type: MealType.of('meat'),
         },
         {
+          identity: RecipeId.of('2'),
           name: Name.of('B'),
           costs: costs.LOW,
           ingredients: [],
@@ -78,6 +58,7 @@ describe('MenuPlanBuilder', () => {
           type: MealType.of('meat'),
         },
         {
+          identity: RecipeId.of('3'),
           name: Name.of('C'),
           costs: costs.EXPENSIVE,
           ingredients: [],
@@ -95,7 +76,7 @@ describe('MenuPlanBuilder', () => {
         [CostType.LOW, CostType.MODERATE],
       );
       // When
-      const menuPlan = new MenuPlanBuilder(recipes)
+      const menuPlan = new MenuPlanBuilder('mock-user', recipes)
         .withHabbits(habbits)
         .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'))
         .build();
@@ -112,6 +93,7 @@ describe('MenuPlanBuilder', () => {
       // Given
       const recipes: IRecipe[] = [
         {
+          identity: RecipeId.of('1'),
           name: Name.of('A'),
           costs: costs.MODERATE,
           ingredients: [],
@@ -122,6 +104,7 @@ describe('MenuPlanBuilder', () => {
           type: MealType.of('meat'),
         },
         {
+          identity: RecipeId.of('2'),
           name: Name.of('B'),
           costs: costs.LOW,
           ingredients: [],
@@ -132,6 +115,7 @@ describe('MenuPlanBuilder', () => {
           type: MealType.of('meat'),
         },
         {
+          identity: RecipeId.of('3'),
           name: Name.of('C'),
           costs: costs.EXPENSIVE,
           ingredients: [],
@@ -142,6 +126,7 @@ describe('MenuPlanBuilder', () => {
           type: MealType.of('meat'),
         },
         {
+          identity: RecipeId.of('4'),
           name: Name.of('D'),
           costs: costs.EXPENSIVE,
           ingredients: [],
@@ -159,7 +144,7 @@ describe('MenuPlanBuilder', () => {
         [CostType.LOW, CostType.MODERATE],
       );
       // When
-      const menuPlan = new MenuPlanBuilder(recipes)
+      const menuPlan = new MenuPlanBuilder('mock-user', recipes)
         .withHabbits(habbits)
         .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'))
         .build();
@@ -176,6 +161,7 @@ describe('MenuPlanBuilder', () => {
       // Given
       const recipes: IRecipe[] = [
         {
+          identity: RecipeId.of('1'),
           name: Name.of('A'),
           costs: costs.MODERATE,
           ingredients: [],
@@ -186,6 +172,7 @@ describe('MenuPlanBuilder', () => {
           type: MealType.of('meat'),
         },
         {
+          identity: RecipeId.of('2'),
           name: Name.of('B'),
           costs: costs.LOW,
           ingredients: [],
@@ -196,6 +183,7 @@ describe('MenuPlanBuilder', () => {
           type: MealType.of('vegetarian'),
         },
         {
+          identity: RecipeId.of('3'),
           name: Name.of('C'),
           costs: costs.EXPENSIVE,
           ingredients: [],
@@ -206,6 +194,7 @@ describe('MenuPlanBuilder', () => {
           type: MealType.of('pescetarian'),
         },
         {
+          identity: RecipeId.of('4'),
           name: Name.of('D'),
           costs: costs.EXPENSIVE,
           ingredients: [],
@@ -223,7 +212,7 @@ describe('MenuPlanBuilder', () => {
         [CostType.LOW, CostType.MODERATE],
       );
       // When
-      const menuPlan = new MenuPlanBuilder(recipes)
+      const menuPlan = new MenuPlanBuilder('mock-user', recipes)
         .withHabbits(habbits)
         .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'))
         .build();
@@ -238,6 +227,7 @@ describe('MenuPlanBuilder', () => {
       // Given
       const recipes: IRecipe[] = [
         {
+          identity: RecipeId.of('1'),
           name: Name.of('A'),
           costs: costs.MODERATE,
           ingredients: [],
@@ -248,6 +238,7 @@ describe('MenuPlanBuilder', () => {
           type: MealType.of('meat'),
         },
         {
+          identity: RecipeId.of('2'),
           name: Name.of('B'),
           costs: costs.LOW,
           ingredients: [],
@@ -258,6 +249,7 @@ describe('MenuPlanBuilder', () => {
           type: MealType.of('meat'),
         },
         {
+          identity: RecipeId.of('3'),
           name: Name.of('C'),
           costs: costs.EXPENSIVE,
           ingredients: [],
@@ -276,7 +268,7 @@ describe('MenuPlanBuilder', () => {
         [CostType.LOW, CostType.MODERATE],
       );
       // When
-      const menuPlan = new MenuPlanBuilder(recipes)
+      const menuPlan = new MenuPlanBuilder('mock-user', recipes)
         .withHabbits(habbits)
         .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'))
         .build();
@@ -287,6 +279,7 @@ describe('MenuPlanBuilder', () => {
       // Given
       const recipes: IRecipe[] = [
         {
+          identity: RecipeId.of('1'),
           name: Name.of('A'),
           costs: costs.MODERATE,
           ingredients: [],
@@ -297,6 +290,7 @@ describe('MenuPlanBuilder', () => {
           type: MealType.of('meat'),
         },
         {
+          identity: RecipeId.of('1'),
           name: Name.of('B'),
           costs: costs.MODERATE,
           ingredients: [],
@@ -307,6 +301,7 @@ describe('MenuPlanBuilder', () => {
           type: MealType.of('meat'),
         },
         {
+          identity: RecipeId.of('1'),
           name: Name.of('C'),
           costs: costs.MODERATE,
           ingredients: [],
@@ -320,7 +315,7 @@ describe('MenuPlanBuilder', () => {
       const mealsPerDay = 2;
       const habbits = new ConsumerHabbits(mealsPerDay, [MealType.of('all')], [DurationType.FAST], [CostType.MODERATE]);
       // When
-      const menuPlan = new MenuPlanBuilder(recipes)
+      const menuPlan = new MenuPlanBuilder('mock-user', recipes)
         .withHabbits(habbits)
         .forPeriod(new Date('2021-09-21'), new Date('2021-09-22'))
         .build();
@@ -334,17 +329,17 @@ describe('MenuPlanBuilder', () => {
   });
   describe('withHabbits', () => {
     it('should validate input', () => {
-      expect(() => new MenuPlanBuilder([]).withHabbits(null)).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder('mock-user', []).withHabbits(null)).toThrow(AssertionError);
     });
   });
   describe('forPeriod', () => {
     it('should validate input', () => {
-      expect(() => new MenuPlanBuilder([]).forPeriod(null, new Date())).toThrow(AssertionError);
-      expect(() => new MenuPlanBuilder([]).forPeriod(new Date(), null)).toThrow(AssertionError);
-      expect(() => new MenuPlanBuilder([]).forPeriod(null, null)).toThrow(AssertionError);
-      expect(() => new MenuPlanBuilder([]).forPeriod(new Date('01/02/2021'), new Date('01/01/2021'))).toThrow(
-        AssertionError,
-      );
+      expect(() => new MenuPlanBuilder('mock-user', []).forPeriod(null, new Date())).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder('mock-user', []).forPeriod(new Date(), null)).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder('mock-user', []).forPeriod(null, null)).toThrow(AssertionError);
+      expect(() =>
+        new MenuPlanBuilder('mock-user', []).forPeriod(new Date('01/02/2021'), new Date('01/01/2021')),
+      ).toThrow(AssertionError);
     });
   });
 });
