@@ -1,18 +1,18 @@
-import { MenuPlan } from '@domain/menuplan.model';
+import { Day, MenuPlan } from '@domain/menuplan.model';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { IRecipe, MenuPlanEntity } from './menuplan.entity';
 
 describe('MenuplanEntity', () => {
   it('should construct from menuplan', () => {
     // Given
-    const menuplan = new MenuPlan('mock-user', [], new Date(), new Date());
+    const menuplan = new MenuPlan('mock-user', [], Day.of(new Date()), Day.of(new Date()));
     // When
     const entity = MenuPlanEntity.from(menuplan);
     // Then
     expect({ ...entity }).toStrictEqual({
       user: menuplan.user,
-      startDay: menuplan.startDay.toISOString(),
-      endDay: menuplan.endDay.toISOString(),
+      startDay: menuplan.start.value.toISOString(),
+      endDay: menuplan.end.value.toISOString(),
       recipes: menuplan.recipes,
     });
   });
@@ -36,7 +36,7 @@ describe('MenuplanEntity', () => {
   });
   it('should transform to menuplan', () => {
     // Given
-    const menuplan = new MenuPlan('mock-user', [], new Date(), new Date());
+    const menuplan = new MenuPlan('mock-user', [], Day.of(new Date()), Day.of(new Date()));
     const entity = MenuPlanEntity.from(menuplan);
     // When
     const menuplan2 = entity.toDomain();

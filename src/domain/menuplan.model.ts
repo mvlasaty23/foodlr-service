@@ -14,14 +14,24 @@ export class ConsumerHabbits {
   ) {}
 }
 
+export class Day {
+  private constructor(public value: Date) {}
+  public static of(date: Date | string): Day {
+    assertOk(!!date, 'Date should not be null');
+    const startOfDay = new Date(typeof date === 'string' ? date : date.getTime());
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    return new Day(startOfDay);
+  }
+}
+
 export class MenuPlan {
-  constructor(public user: string, public recipes: IRecipe[], public startDay: Date, public endDay: Date) {}
+  constructor(public user: string, public recipes: IRecipe[], public start: Day, public end: Day) {}
 }
 
 export class MenuPlanBuilder {
   private habbits: ConsumerHabbits;
-  private startDay: Date;
-  private endDay: Date;
+  private start: Day;
+  private end: Day;
   private seasons: Season[];
 
   constructor(private user: string, private recipes: IRecipe[]) {}
@@ -36,8 +46,8 @@ export class MenuPlanBuilder {
     assertOk(!!end, 'End day should not be null');
     assertOk(start.getTime() < end.getTime(), 'Start day should not be after end day');
 
-    this.startDay = start;
-    this.endDay = end;
+    this.start = Day.of(start);
+    this.end = Day.of(end);
     this.seasons = [Season.from(start), Season.from(end)].filter((season, idx, self) => self.indexOf(season) === idx);
     return this;
   }
@@ -56,7 +66,7 @@ export class MenuPlanBuilder {
       recipes.push(this.randomFrom(eligbaleRecipes));
     }
 
-    return new MenuPlan(this.user, recipes, this.startDay, this.endDay);
+    return new MenuPlan(this.user, recipes, this.start, this.end);
   }
 
   private bySeasons(seasons: Season[]) {
@@ -75,7 +85,7 @@ export class MenuPlanBuilder {
     return this.periodInDays() * this.habbits.mealsPerDay;
   }
   private periodInDays(): number {
-    return Math.abs((this.startDay.getTime() - this.endDay.getTime()) / (1000 * 3600 * 24));
+    return Math.abs((this.start.value.getTime() - this.end.value.getTime()) / (1000 * 3600 * 24));
   }
   // TODO: add deduplication
   private randomFrom(recipes: IRecipe[]): IRecipe {
@@ -84,9 +94,6 @@ export class MenuPlanBuilder {
   private validate(): void {
     assertOk(!!this.recipes && this.recipes.length > 0, 'Recipes should not be null or empty');
     assertOk(!!this.user, 'User should not be null');
-    assertOk(
-      !!this.habbits && !!this.startDay && !!this.endDay && !!this.seasons,
-      'Mandatory properties should not be null',
-    );
+    assertOk(!!this.habbits && !!this.start && !!this.end && !!this.seasons, 'Mandatory properties should not be null');
   }
 }

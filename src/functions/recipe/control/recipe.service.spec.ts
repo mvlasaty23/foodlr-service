@@ -1,5 +1,5 @@
 import { recipe as MockRecipe } from '@domain/mock.model';
-import { Name } from '@domain/recipe.model';
+import { RecipeId } from '@domain/recipe.model';
 import { Region } from '@domain/region.model';
 import { firstValueFrom, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -52,7 +52,7 @@ describe('RecipeService', () => {
       (mockRepository.find$ as jest.Mock).mockReturnValue(of(recipe));
       // When
       return firstValueFrom(
-        service.find$({ region: Region.of('eu-central'), name: Name.of('name') }).pipe(
+        service.find$({ identity: RecipeId.of('mockId') }).pipe(
           map((recipe) => {
             expect(recipe).toStrictEqual(recipe);
             expect(mockRepository.find$).toHaveBeenCalled();
@@ -82,7 +82,7 @@ describe('RecipeService', () => {
       (mockRepository.delete$ as jest.Mock).mockReturnValue(of(true));
       // When
       return firstValueFrom(
-        service.delete$({ region: Region.of('eu-central'), name: Name.of('name') }).pipe(
+        service.delete$({ identity: RecipeId.of('mockId') }).pipe(
           map(() => {
             expect(mockRepository.delete$).toHaveBeenCalled();
           }),

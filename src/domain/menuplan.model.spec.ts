@@ -2,7 +2,7 @@ import { AssertionError } from 'assert';
 import { CostType } from './cost.model';
 import { Duration, DurationType } from './duration.model';
 import { MealType, mealTypes } from './mealtype.model';
-import { ConsumerHabbits, MenuPlanBuilder } from './menuplan.model';
+import { ConsumerHabbits, Day, MenuPlanBuilder } from './menuplan.model';
 import { costs, recipe, seasons } from './mock.model';
 import { IRecipe, Name, RecipeId, Servings } from './recipe.model';
 import { Region } from './region.model';
@@ -341,5 +341,31 @@ describe('MenuPlanBuilder', () => {
         new MenuPlanBuilder('mock-user', []).forPeriod(new Date('01/02/2021'), new Date('01/01/2021')),
       ).toThrow(AssertionError);
     });
+  });
+});
+describe('Day', () => {
+  it('should construct from date', () => {
+    // Given
+    const date = new Date('2022-02-12T15:53:53.198');
+    // When
+    const day = Day.of(date);
+    // Then
+    expect({ ...day }).toStrictEqual({
+      value: new Date('2022-02-12'),
+    });
+  });
+  it('should construct from string', () => {
+    // Given
+    const date = '2022-02-12T15:53:53.198';
+    // When
+    const day = Day.of(date);
+    // Then
+    expect({ ...day }).toStrictEqual({
+      value: new Date('2022-02-12'),
+    });
+  });
+  it('should validate input', () => {
+    expect(() => Day.of('')).toThrow(AssertionError);
+    expect(() => Day.of(null)).toThrow(AssertionError);
   });
 });

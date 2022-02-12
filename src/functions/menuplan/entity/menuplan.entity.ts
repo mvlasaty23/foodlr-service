@@ -1,5 +1,5 @@
 import { MealTypes } from '@domain/mealtype.model';
-import { MenuPlan } from '@domain/menuplan.model';
+import { Day, MenuPlan } from '@domain/menuplan.model';
 import { Recipe } from '@domain/recipe.model';
 import { RegionKeys } from '@domain/region.model';
 import { SeasonKeys } from '@domain/season.model';
@@ -20,7 +20,7 @@ export interface IRecipe {
 /**
  * GPI ByUser
  */
-interface Identifieable {
+export interface Identifieable {
   user: string;
   startDay: string;
 }
@@ -30,8 +30,8 @@ export class MenuPlanEntity implements Identifieable {
   public static from(menuplan: MenuPlan): MenuPlanEntity {
     return new MenuPlanEntity(
       menuplan.user,
-      menuplan.startDay.toISOString(),
-      menuplan.endDay.toISOString(),
+      menuplan.start.value.toISOString(),
+      menuplan.end.value.toISOString(),
       menuplan.recipes.map((recipe) => ({
         identity: recipe.identity.value,
         name: recipe.name.value,
@@ -74,8 +74,8 @@ export class MenuPlanEntity implements Identifieable {
           type: recipe.type as MealTypes,
         }),
       ),
-      new Date(this.startDay),
-      new Date(this.endDay),
+      Day.of(this.startDay),
+      Day.of(this.endDay),
     );
   }
 }

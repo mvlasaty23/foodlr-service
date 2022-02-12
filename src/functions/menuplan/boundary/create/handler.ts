@@ -30,8 +30,8 @@ export const createMenuPlan$: ValidatedEventAPIGatewayProxyHandler<typeof schema
     })
     .then<APIGatewayProxyResult>((menuPlan) =>
       formatJSONResponse({
-        startDay: menuPlan.startDay.toISOString(),
-        endDay: menuPlan.endDay.toISOString(),
+        startDay: menuPlan.start.value.toISOString(),
+        endDay: menuPlan.end.value.toISOString(),
         recipes: menuPlan.recipes.map((recipe) => ({
           name: recipe.name.value,
           servings: recipe.servings.value,
