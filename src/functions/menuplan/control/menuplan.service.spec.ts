@@ -4,18 +4,25 @@ import { MealType } from '@domain/mealtype.model';
 import { recipes } from '@domain/mock.model';
 import { RecipeFacade } from '@functions/recipe/api/recipe.facade';
 import { of } from 'rxjs';
+import { MenuplanRepository } from '../entity/menuplan.repository';
 import MenuPlanService from './menuplan.service';
 
 describe('MenuPlanService', () => {
   const mockRecipeFacade: Partial<RecipeFacade> = {
     findByRegion$: jest.fn(),
   };
-  const service = new MenuPlanService(mockRecipeFacade as RecipeFacade);
+  const mockRepository: Partial<MenuplanRepository> = {
+    findByUser$: jest.fn(),
+    save$: jest.fn(),
+    delete$: jest.fn(),
+  };
+  const service = new MenuPlanService(mockRecipeFacade as RecipeFacade, mockRepository as MenuplanRepository);
 
   describe('generateMenuPlan$', () => {
     it('should generate a menuplan', () => {
       // Given
       (mockRecipeFacade.findByRegion$ as jest.Mock).mockReturnValue(of(recipes));
+      (mockRepository.save$ as jest.Mock).mockImplementation((input) => Promise.resolve(input));
       // When
       return service
         .generateMenuPlan$({
