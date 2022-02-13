@@ -1,9 +1,18 @@
 import type { APIGatewayProxyEvent, APIGatewayProxyResult, Handler } from 'aws-lambda';
 import type { FromSchema } from 'json-schema-to-ts';
 
-export type ValidatedAPIGatewayProxyEvent<T> = Omit<APIGatewayProxyEvent, 'body'> & { body: FromSchema<T> };
-export type ValidatedEventAPIGatewayProxyHandler<T> = Handler<ValidatedAPIGatewayProxyEvent<T>, APIGatewayProxyResult>;
-export type APIGatewayProxyHandler = Handler<APIGatewayProxyEvent, APIGatewayProxyResult>;
+export type ValidatedAPIGatewayProxyEvent<T, TH> = Omit<APIGatewayProxyEvent, 'body' | 'headers'> & {
+  body: FromSchema<T>;
+} & { headers: FromSchema<TH> };
+export type ValidatedEventAPIGatewayProxyHandler<T, TH = Record<string, string>> = Handler<
+  ValidatedAPIGatewayProxyEvent<T, TH>,
+  APIGatewayProxyResult
+>;
+type APIGatewayProxyEventWithHeaders<T> = Omit<APIGatewayProxyEvent, 'headers'> & { headers: FromSchema<T> };
+export type APIGatewayProxyHandler<T = Record<string, string>> = Handler<
+  APIGatewayProxyEventWithHeaders<T>,
+  APIGatewayProxyResult
+>;
 
 export const formatJSONResponse = (
   response: Record<string, unknown> | Record<string, unknown>[],

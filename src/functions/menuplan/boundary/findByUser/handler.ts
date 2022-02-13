@@ -8,6 +8,7 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import 'source-map-support/register';
 import { formatMenuplans, menuplanTable } from '../common';
+import headerSchema from '../dto/user.header.schema';
 
 const dbClient = new AWS.DynamoDB.DocumentClient();
 const menuPlanService = new MenuPlanService(
@@ -15,7 +16,7 @@ const menuPlanService = new MenuPlanService(
   new MenuplanRepository(dbClient, menuplanTable),
 );
 
-export const findMenuplans$: APIGatewayProxyHandler = async (event) => {
+export const findMenuplans$: APIGatewayProxyHandler<typeof headerSchema> = async (event) => {
   const user = event.headers['x-user-id'];
   return menuPlanService.findMenuplans$(user).then<APIGatewayProxyResult>(formatMenuplans);
 };

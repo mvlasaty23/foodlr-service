@@ -3,6 +3,7 @@ import { Day, MenuPlan } from '@domain/menuplan.model';
 import { Recipe } from '@domain/recipe.model';
 import { RegionKeys } from '@domain/region.model';
 import { SeasonKeys } from '@domain/season.model';
+import headerSchema from '@functions/menuplan/boundary/dto/user.header.schema';
 import MenuPlanService from '@functions/menuplan/control/menuplan.service';
 import { MenuplanRepository } from '@functions/menuplan/entity/menuplan.repository';
 import { RecipeFacade } from '@functions/recipe/api/recipe.facade';
@@ -21,7 +22,9 @@ const menuPlanService = new MenuPlanService(
   new MenuplanRepository(dbClient, menuplanTable),
 );
 
-export const updateMenuplan$: ValidatedEventAPIGatewayProxyHandler<typeof schema> = async (event) => {
+export const updateMenuplan$: ValidatedEventAPIGatewayProxyHandler<typeof schema, typeof headerSchema> = async (
+  event,
+) => {
   const user = event.headers['x-user-id'];
   const { recipes, startDay, endDay } = event.body;
   return menuPlanService

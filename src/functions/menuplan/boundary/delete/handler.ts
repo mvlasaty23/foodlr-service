@@ -1,5 +1,6 @@
 import { Day } from '@domain/menuplan.model';
 import schema from '@functions/menuplan/boundary/dto/delete.dto.schema';
+import headerSchema from '@functions/menuplan/boundary/dto/user.header.schema';
 import MenuPlanService from '@functions/menuplan/control/menuplan.service';
 import { MenuplanRepository } from '@functions/menuplan/entity/menuplan.repository';
 import { RecipeFacade } from '@functions/recipe/api/recipe.facade';
@@ -17,7 +18,9 @@ const menuPlanService = new MenuPlanService(
   new MenuplanRepository(dbClient, menuplanTable),
 );
 
-export const deleteMenuplan$: ValidatedEventAPIGatewayProxyHandler<typeof schema> = async (event) => {
+export const deleteMenuplan$: ValidatedEventAPIGatewayProxyHandler<typeof schema, typeof headerSchema> = async (
+  event,
+) => {
   const { day } = event.body;
   const user = event.headers['x-user-id'];
   return menuPlanService
