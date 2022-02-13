@@ -30,8 +30,8 @@ export class MenuPlanEntity implements Identifieable {
   public static from(menuplan: MenuPlan): MenuPlanEntity {
     return new MenuPlanEntity(
       menuplan.user,
-      menuplan.start.value.toISOString(),
-      menuplan.end.value.toISOString(),
+      menuplan.start.toISOString(),
+      menuplan.end.toISOString(),
       menuplan.recipes.map((recipe) => ({
         identity: recipe.identity.value,
         name: recipe.name.value,

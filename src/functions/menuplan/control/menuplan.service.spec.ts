@@ -1,6 +1,7 @@
 import { CostType } from '@domain/cost.model';
 import { DurationType } from '@domain/duration.model';
 import { MealType } from '@domain/mealtype.model';
+import { Day } from '@domain/menuplan.model';
 import { recipes } from '@domain/mock.model';
 import { RecipeFacade } from '@functions/recipe/api/recipe.facade';
 import { of } from 'rxjs';
@@ -43,6 +44,31 @@ describe('MenuPlanService', () => {
           expect(mockRecipeFacade.findByRegion$).toHaveBeenCalled();
           expect(menuPlan).toBeTruthy();
         });
+    });
+  });
+  describe('findMenuplans$', () => {
+    it('should return a list of menuplan', () => {
+      // Given
+      const user = 'mockuser';
+      (mockRepository.findByUser$ as jest.Mock).mockReturnValue(Promise.resolve([]));
+      // When
+      return service.findMenuplans$(user).then((menuplans) => {
+        // Then
+        expect(menuplans).toBeTruthy();
+        expect(mockRepository.findByUser$).toHaveBeenCalledWith({ user });
+      });
+    });
+  });
+  describe('deleteMenuplan$', () => {
+    it('should call repository.delete$', () => {
+      // Given
+      const command = { user: 'mockuser', day: Day.of('2022-02-12') };
+      (mockRepository.delete$ as jest.Mock).mockReturnValue(Promise.resolve(true));
+      // When
+      return service.deleteMenuplan$(command).then((result) => {
+        expect(result).toBeTruthy();
+        expect(mockRepository.delete$).toHaveBeenCalled();
+      });
     });
   });
 });

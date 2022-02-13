@@ -22,6 +22,9 @@ export class Day {
     startOfDay.setUTCHours(0, 0, 0, 0);
     return new Day(startOfDay);
   }
+  public toISOString(): string {
+    return this.value.toISOString();
+  }
 }
 
 export class MenuPlan {

@@ -1,6 +1,7 @@
 import { Cost, CostType } from './cost.model';
 import { Duration } from './duration.model';
 import { MealType } from './mealtype.model';
+import { Day, MenuPlan } from './menuplan.model';
 import { IRecipe, Name, Recipe, RecipeId, Servings } from './recipe.model';
 import { Region } from './region.model';
 import { Season, SeasonKeys } from './season.model';
@@ -80,4 +81,11 @@ export const recipes: IRecipe[] = [
     season: seasons.winter,
     type: MealType.of('meat'),
   },
+];
+
+export const user = 'mock-user';
+export const menuplan = new MenuPlan(user, recipes, Day.of(new Date('2021-01-01')), Day.of(new Date('2021-01-06')));
+export const menuplans = [
+  menuplan,
+  new MenuPlan(user, recipes, Day.of(new Date('2021-01-07')), Day.of(new Date('2021-01-10'))),
 ];

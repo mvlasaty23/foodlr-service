@@ -1,13 +1,8 @@
-import { CostType } from '@domain/cost.model';
-import { DurationType } from '@domain/duration.model';
-import { MealType, MealTypes } from '@domain/mealtype.model';
-import { ConsumerHabbits } from '@domain/menuplan.model';
-import schema from '@functions/menuplan/boundary/dto/create.dto.schema';
 import MenuPlanService from '@functions/menuplan/control/menuplan.service';
 import { MenuplanRepository } from '@functions/menuplan/entity/menuplan.repository';
 import { RecipeFacade } from '@functions/recipe/api/recipe.facade';
 import { table as recipeTable } from '@functions/recipe/boundary/common';
-import { formatJSONResponse, ValidatedEventAPIGatewayProxyHandler } from '@libs/apiGateway';
+import { APIGatewayProxyHandler, formatJSONResponse } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
@@ -20,22 +15,11 @@ const menuPlanService = new MenuPlanService(
   new MenuplanRepository(dbClient, menuplanTable),
 );
 
-export const createMenuPlan$: ValidatedEventAPIGatewayProxyHandler<typeof schema> = async (event) => {
-  const { habbits, period } = event.body;
+export const findMenuplans$: APIGatewayProxyHandler = async (event) => {
   const user = event.headers['x-user-id'];
-  return menuPlanService
-    .generateMenuPlan$({
-      user,
-      habbits: new ConsumerHabbits(
-        habbits.mealsPerDay,
-        habbits.types.map((type) => MealType.of(type as MealTypes)),
-        habbits.prepTimes as DurationType[],
-        habbits.costs as CostType[],
-      ),
-      period: { start: new Date(period.start), end: new Date(period.end) },
-    })
-    .then<APIGatewayProxyResult>((menuPlan) =>
-      formatJSONResponse({
+  return menuPlanService.findMenuplans$(user).then<APIGatewayProxyResult>((menuPlans) =>
+    formatJSONResponse(
+      menuPlans.map((menuPlan) => ({
         startDay: menuPlan.start.toISOString(),
         endDay: menuPlan.end.toISOString(),
         recipes: menuPlan.recipes.map((recipe) => ({
@@ -51,8 +35,9 @@ export const createMenuPlan$: ValidatedEventAPIGatewayProxyHandler<typeof schema
           costs: recipe.costs.value,
           region: recipe.region.value,
         })),
-      }),
-    );
+      })),
+    ),
+  );
 };
 
-export const main = middyfy(createMenuPlan$);
+export const main = middyfy(findMenuplans$);

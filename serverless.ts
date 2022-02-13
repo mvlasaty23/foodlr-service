@@ -6,6 +6,8 @@ import {
   recipeFindOne,
   recipeUpdate,
   menuplanCreate,
+  menuplanFind,
+  menuplanDelete,
 } from '@functions/index';
 import type { AWS } from '@serverless/typescript';
 import dynamodbTables from 'resources/dynamodb';
@@ -117,7 +119,17 @@ const serverlessConfiguration: AWS = {
       },
     },
   },
-  functions: { bookingManual, bookingBarcode, recipeCreate, recipeFindOne, recipeUpdate, recipeDelete, menuplanCreate },
+  functions: {
+    bookingManual,
+    bookingBarcode,
+    recipeCreate,
+    recipeFindOne,
+    recipeUpdate,
+    recipeDelete,
+    menuplanCreate,
+    menuplanFind,
+    menuplanDelete,
+  },
   resources: {
     Resources: dynamodbTables,
   },
