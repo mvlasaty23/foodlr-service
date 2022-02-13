@@ -6,7 +6,6 @@ import { SeasonKeys } from '@domain/season.model';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 
 export interface IRecipe {
-  identity: string;
   name: string;
   servings: number;
   ingredients: { name: string; quantity: number; uom: string }[];
@@ -33,7 +32,6 @@ export class MenuPlanEntity implements Identifieable {
       menuplan.start.toISOString(),
       menuplan.end.toISOString(),
       menuplan.recipes.map((recipe) => ({
-        identity: recipe.identity.value,
         name: recipe.name.value,
         servings: recipe.servings.value,
         ingredients: recipe.ingredients.map((i) => ({
@@ -63,7 +61,6 @@ export class MenuPlanEntity implements Identifieable {
       this.user,
       this.recipes.map((recipe) =>
         Recipe.of({
-          identity: recipe.identity,
           name: recipe.name,
           servings: recipe.servings,
           ingredients: recipe.ingredients,

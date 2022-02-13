@@ -8,6 +8,7 @@ import {
   menuplanCreate,
   menuplanFind,
   menuplanDelete,
+  menuplanUpdate,
 } from '@functions/index';
 import type { AWS } from '@serverless/typescript';
 import dynamodbTables from 'resources/dynamodb';
@@ -129,6 +130,7 @@ const serverlessConfiguration: AWS = {
     menuplanCreate,
     menuplanFind,
     menuplanDelete,
+    menuplanUpdate,
   },
   resources: {
     Resources: dynamodbTables,
