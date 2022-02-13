@@ -2,7 +2,7 @@ import { CostType } from '@domain/cost.model';
 import { DurationType } from '@domain/duration.model';
 import { MealType } from '@domain/mealtype.model';
 import { Day } from '@domain/menuplan.model';
-import { recipes } from '@domain/mock.model';
+import { menuplan, recipes } from '@domain/mock.model';
 import { RecipeFacade } from '@functions/recipe/api/recipe.facade';
 import { of } from 'rxjs';
 import { MenuplanRepository } from '../entity/menuplan.repository';
@@ -68,6 +68,18 @@ describe('MenuPlanService', () => {
       return service.deleteMenuplan$(command).then((result) => {
         expect(result).toBeTruthy();
         expect(mockRepository.delete$).toHaveBeenCalled();
+      });
+    });
+  });
+  describe('updateMenuplan$', () => {
+    it('should call repository.save$', () => {
+      // Given
+      const command = { menuplan };
+      (mockRepository.save$ as jest.Mock).mockReturnValue(Promise.resolve(menuplan));
+      // When
+      return service.updateMenuplan$(command).then((result) => {
+        expect(result).toBeTruthy();
+        expect(mockRepository.save$).toHaveBeenCalled();
       });
     });
   });

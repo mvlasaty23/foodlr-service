@@ -19,6 +19,10 @@ export interface IDeleteCommand {
   day: Day;
 }
 
+export interface IUpdateCommand {
+  menuplan: MenuPlan;
+}
+
 export default class MenuPlanService {
   constructor(private recipeFacade: RecipeFacade, private repository: MenuplanRepository) {}
 
@@ -42,5 +46,9 @@ export default class MenuPlanService {
 
   public async deleteMenuplan$(command: IDeleteCommand): Promise<boolean> {
     return this.repository.delete$({ user: command.user, startDay: command.day.toISOString() });
+  }
+
+  public async updateMenuplan$(command: IUpdateCommand): Promise<MenuPlan> {
+    return this.repository.save$(command.menuplan);
   }
 }
