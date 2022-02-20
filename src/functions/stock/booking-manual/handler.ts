@@ -1,4 +1,4 @@
-import type { ValidatedEventAPIGatewayProxyHandler } from '@libs/apiGateway';
+import type { APIGatewayProxyBodyHandler } from '@libs/apiGateway';
 import { formatJSONResponse } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
 import * as AWS from 'aws-sdk';
@@ -10,7 +10,7 @@ import schema from './schema';
 const dbClient = new AWS.DynamoDB.DocumentClient();
 // TODO: set region by env?
 
-const bookingManual: ValidatedEventAPIGatewayProxyHandler<typeof schema> = async (event) => {
+const bookingManual: APIGatewayProxyBodyHandler<typeof schema> = async (event) => {
   // First check if we have this product in our stock pile
   return firstValueFrom(
     from(

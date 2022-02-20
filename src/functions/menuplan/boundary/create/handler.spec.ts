@@ -1,6 +1,7 @@
 import { Day, MenuPlan } from '@domain/menuplan.model';
 import schema from '@functions/menuplan/boundary/dto/create.dto.schema';
-import { ValidatedAPIGatewayProxyEvent } from '@libs/apiGateway';
+import headerSchema from '@functions/menuplan/boundary/dto/user.header.schema';
+import { ValidatedAPIGatewayProxyEventAndHeader } from '@libs/apiGateway';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { createMenuPlan$ } from './handler';
 
@@ -21,7 +22,7 @@ describe('Create Menuplan Handler', () => {
     mockGenerateMenuPlan$.mockReturnValue(
       Promise.resolve(new MenuPlan('mock-user', [], Day.of(new Date('2021-01-01')), Day.of(new Date('2021-01-06')))),
     );
-    const request: Partial<ValidatedAPIGatewayProxyEvent<typeof schema>> = {
+    const request: Partial<ValidatedAPIGatewayProxyEventAndHeader<typeof schema, typeof headerSchema>> = {
       body: {
         period: {
           start: '2021-01-01',
@@ -37,7 +38,11 @@ describe('Create Menuplan Handler', () => {
       headers: { 'x-user-id': 'mock-user' },
     };
     // When
-    const response = handler(request as ValidatedAPIGatewayProxyEvent<typeof schema>, null, null);
+    const response = handler(
+      request as ValidatedAPIGatewayProxyEventAndHeader<typeof schema, typeof headerSchema>,
+      null,
+      null,
+    );
     // Then
     return (response as Promise<APIGatewayProxyResult>).then((res) => {
       expect(mockGenerateMenuPlan$).toHaveBeenCalled();

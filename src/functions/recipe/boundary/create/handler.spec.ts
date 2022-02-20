@@ -30,10 +30,10 @@ describe('Recipe Create Handler', () => {
           {
             name: 'name',
             quantity: 2,
-            uom: 'uom',
+            uom: 'g',
           },
         ],
-        preparationTime: { quantity: 2, uom: 'uom' },
+        preparationTime: { quantity: 2, uom: 'm' },
         season: 'season',
         costs: 2,
         region: 'region',

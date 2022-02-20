@@ -1,6 +1,7 @@
 import { ok as assertOk } from 'assert';
 import { CostType } from './cost.model';
 import { DurationType } from './duration.model';
+import { Ingredient } from './ingredient';
 import { MealType } from './mealtype.model';
 import { IRecipe } from './recipe.model';
 import { Season } from './season.model';
@@ -26,9 +27,29 @@ export class Day {
     return this.value.toISOString();
   }
 }
-
+export class ShoppingList {
+  constructor(public items: Ingredient[]) {}
+}
 export class MenuPlan {
   constructor(public user: string, public recipes: IRecipe[], public start: Day, public end: Day) {}
+  public shoppingList(): ShoppingList {
+    return new ShoppingList(
+      this.recipes
+        .map((recipe) => recipe.ingredients)
+        .flat()
+        .reduce((prev, next) => {
+          const idx = prev.findIndex((i) => i.name.value === next.name.value);
+          if (idx > -1) {
+            // eslint-disable-next-line security/detect-object-injection
+            const ingredient = prev[idx];
+            prev.splice(idx, 1, ingredient.add(next));
+          } else {
+            prev.push(next);
+          }
+          return prev;
+        }, [] as Ingredient[]),
+    );
+  }
 }
 
 export class MenuPlanBuilder {

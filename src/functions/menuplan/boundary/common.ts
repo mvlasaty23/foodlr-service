@@ -32,8 +32,9 @@ function menuplanDto(menuPlan: MenuPlan): IMenuplanDto {
       servings: recipe.servings.value,
       ingredients: recipe.ingredients.map((it) => ({
         name: it.name.value,
-        quantity: it.quantity.value,
-        uom: it.uom.value,
+        quantity: it.amount.value,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        uom: it.amount.uom,
       })),
       preparationTime: recipe.preparationTime.value,
       season: recipe.season.value,

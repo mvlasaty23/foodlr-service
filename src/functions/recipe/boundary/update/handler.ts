@@ -5,7 +5,7 @@ import { SeasonKeys } from '@domain/season.model';
 import { mapToRecipeDto, table } from '@functions/recipe/boundary/common';
 import schema from '@functions/recipe/boundary/dto/recipe.dto.schema';
 import RecipeService from '@functions/recipe/control/recipe.service';
-import { ValidatedEventAPIGatewayProxyHandler } from '@libs/apiGateway';
+import { APIGatewayProxyBodyHandler } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
 import * as AWS from 'aws-sdk';
 import { firstValueFrom } from 'rxjs';
@@ -13,7 +13,7 @@ import { firstValueFrom } from 'rxjs';
 const dbClient = new AWS.DynamoDB.DocumentClient();
 const recipeService = RecipeService.of(dbClient, table);
 
-export const update$: ValidatedEventAPIGatewayProxyHandler<typeof schema> = async (event) => {
+export const update$: APIGatewayProxyBodyHandler<typeof schema> = async (event) => {
   const { identity, name, servings, ingredients, preparationTime, season, costs, region, type } = event.body;
   return firstValueFrom(
     recipeService

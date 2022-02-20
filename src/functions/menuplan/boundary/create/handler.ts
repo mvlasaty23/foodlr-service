@@ -8,7 +8,7 @@ import MenuPlanService from '@functions/menuplan/control/menuplan.service';
 import { MenuplanRepository } from '@functions/menuplan/entity/menuplan.repository';
 import { RecipeFacade } from '@functions/recipe/api/recipe.facade';
 import { table as recipeTable } from '@functions/recipe/boundary/common';
-import { ValidatedEventAPIGatewayProxyHandler } from '@libs/apiGateway';
+import { APIGatewayProxyValidatedHandler } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
@@ -21,9 +21,7 @@ const menuPlanService = new MenuPlanService(
   new MenuplanRepository(dbClient, menuplanTable),
 );
 
-export const createMenuPlan$: ValidatedEventAPIGatewayProxyHandler<typeof schema, typeof headerSchema> = async (
-  event,
-) => {
+export const createMenuPlan$: APIGatewayProxyValidatedHandler<typeof schema, typeof headerSchema> = async (event) => {
   const { habbits, period } = event.body;
   const user = event.headers['x-user-id'];
   return menuPlanService

@@ -4,12 +4,12 @@ import { RegionKeys } from '@domain/region.model';
 import { SeasonKeys } from '@domain/season.model';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { v4 as uuid } from 'uuid';
-interface IIngredient {
+export interface IIngredient {
   name: string;
   quantity: number;
   uom: string;
 }
-interface IPreparationTime {
+export interface IPreparationTime {
   value: number;
 }
 
@@ -46,7 +46,11 @@ export class RecipeEntity implements Identifieable, Localizable {
       recipe.identity.orElse(uuid()),
       recipe.name.value,
       recipe.servings.value,
-      recipe.ingredients.map((it) => ({ name: it.name.value, quantity: it.quantity.value, uom: it.uom.value })),
+      recipe.ingredients.map((it) => ({
+        name: it.name.value,
+        quantity: it.amount.value,
+        uom: it.amount.uom as string,
+      })),
       { value: recipe.preparationTime.value },
       recipe.season.value,
       recipe.costs.value,

@@ -1,16 +1,24 @@
 import type { APIGatewayProxyEvent, APIGatewayProxyResult, Handler } from 'aws-lambda';
 import type { FromSchema } from 'json-schema-to-ts';
 
-export type ValidatedAPIGatewayProxyEvent<T, TH> = Omit<APIGatewayProxyEvent, 'body' | 'headers'> & {
+// Event
+export type ValidatedAPIGatewayProxyEvent<T> = Omit<APIGatewayProxyEvent, 'body'> & {
   body: FromSchema<T>;
-} & { headers: FromSchema<TH> };
-export type ValidatedEventAPIGatewayProxyHandler<T, TH = Record<string, string>> = Handler<
-  ValidatedAPIGatewayProxyEvent<T, TH>,
+};
+export type APIGatewayProxyEventWithHeaders<T> = Omit<APIGatewayProxyEvent, 'headers'> & { headers: FromSchema<T> };
+export type ValidatedAPIGatewayProxyEventAndHeader<T, TH> = Omit<ValidatedAPIGatewayProxyEvent<T>, 'headers'> & {
+  headers: FromSchema<TH>;
+};
+
+// Event Handler
+export type APIGatewayProxyHandler = Handler<APIGatewayProxyEvent, APIGatewayProxyResult>;
+export type APIGatewayProxyBodyHandler<T> = Handler<ValidatedAPIGatewayProxyEvent<T>, APIGatewayProxyResult>;
+export type APIGatewayProxyHeaderHandler<T = Record<string, string>> = Handler<
+  APIGatewayProxyEventWithHeaders<T>,
   APIGatewayProxyResult
 >;
-type APIGatewayProxyEventWithHeaders<T> = Omit<APIGatewayProxyEvent, 'headers'> & { headers: FromSchema<T> };
-export type APIGatewayProxyHandler<T = Record<string, string>> = Handler<
-  APIGatewayProxyEventWithHeaders<T>,
+export type APIGatewayProxyValidatedHandler<T, TH> = Handler<
+  ValidatedAPIGatewayProxyEventAndHeader<T, TH>,
   APIGatewayProxyResult
 >;
 

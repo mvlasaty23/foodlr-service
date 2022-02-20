@@ -1,6 +1,8 @@
 import { MenuPlan } from '@domain/menuplan.model';
 import { menuplans, user as mockUser } from '@domain/mock.model';
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { APIGatewayProxyEventWithHeaders } from '@libs/apiGateway';
+import { APIGatewayProxyResult } from 'aws-lambda';
+import headerSchema from '../dto/user.header.schema';
 import { findMenuplans$ } from './handler';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,13 +20,13 @@ describe('Find Menuplans Handler', () => {
     // Given
     mockFindMenuplan$.mockReturnValue(Promise.resolve(menuplans));
     const user = mockUser;
-    const request: Partial<APIGatewayProxyEvent> = {
+    const request: Partial<APIGatewayProxyEventWithHeaders<typeof headerSchema>> = {
       headers: {
         'x-user-id': user,
       },
     };
     // When
-    const response = handler(request as APIGatewayProxyEvent, null, null);
+    const response = handler(request as APIGatewayProxyEventWithHeaders<typeof headerSchema>, null, null);
     // Then
     return (response as Promise<APIGatewayProxyResult>).then((res) => {
       expect(mockFindMenuplan$).toHaveBeenCalled();

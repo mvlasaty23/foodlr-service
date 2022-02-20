@@ -1,9 +1,10 @@
 import { MenuPlan } from '@domain/menuplan.model';
 import { menuplan } from '@domain/mock.model';
-import { ValidatedAPIGatewayProxyEvent } from '@libs/apiGateway';
-import { updateMenuplan$ } from './handler';
-import schema from '../dto/update.dto.schema';
+import headerSchema from '@functions/menuplan/boundary/dto/user.header.schema';
+import { ValidatedAPIGatewayProxyEventAndHeader } from '@libs/apiGateway';
 import { APIGatewayProxyResult } from 'aws-lambda';
+import schema from '../dto/update.dto.schema';
+import { updateMenuplan$ } from './handler';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockUpdateMenuplan$ = jest.fn<Promise<MenuPlan>, any>();
@@ -19,7 +20,7 @@ describe('Update Menuplan Handler', () => {
   it('should update a menuplan', () => {
     // Given
     mockUpdateMenuplan$.mockReturnValue(Promise.resolve(menuplan));
-    const request: Partial<ValidatedAPIGatewayProxyEvent<typeof schema>> = {
+    const request: Partial<ValidatedAPIGatewayProxyEventAndHeader<typeof schema, typeof headerSchema>> = {
       headers: {
         'x-user-id': 'mv',
       },
@@ -30,7 +31,11 @@ describe('Update Menuplan Handler', () => {
       },
     };
     // When
-    const response = handler(request as ValidatedAPIGatewayProxyEvent<typeof schema>, null, null);
+    const response = handler(
+      request as ValidatedAPIGatewayProxyEventAndHeader<typeof schema, typeof headerSchema>,
+      null,
+      null,
+    );
     // Then
     return (response as Promise<APIGatewayProxyResult>).then((res) => {
       expect(mockUpdateMenuplan$).toHaveBeenCalled();

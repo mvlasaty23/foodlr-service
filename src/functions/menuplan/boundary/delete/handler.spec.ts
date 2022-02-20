@@ -1,7 +1,8 @@
-import { deleteMenuplan$ } from './handler';
-import schema from '../dto/delete.dto.schema';
-import { ValidatedAPIGatewayProxyEvent } from '@libs/apiGateway';
+import headerSchema from '@functions/menuplan/boundary/dto/user.header.schema';
+import { ValidatedAPIGatewayProxyEventAndHeader } from '@libs/apiGateway';
 import { APIGatewayProxyResult } from 'aws-lambda';
+import schema from '../dto/delete.dto.schema';
+import { deleteMenuplan$ } from './handler';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockDeleteMenuplan$ = jest.fn<Promise<boolean>, any>();
@@ -17,7 +18,7 @@ describe('Delete Menuplan Handler', () => {
   it('should delete a menuplan', () => {
     // Given
     mockDeleteMenuplan$.mockReturnValue(Promise.resolve(true));
-    const request: Partial<ValidatedAPIGatewayProxyEvent<typeof schema>> = {
+    const request: Partial<ValidatedAPIGatewayProxyEventAndHeader<typeof schema, typeof headerSchema>> = {
       headers: {
         'x-user-id': 'mock-user',
       },
@@ -26,7 +27,11 @@ describe('Delete Menuplan Handler', () => {
       },
     };
     // When
-    const response = handler(request as ValidatedAPIGatewayProxyEvent<typeof schema>, null, null);
+    const response = handler(
+      request as ValidatedAPIGatewayProxyEventAndHeader<typeof schema, typeof headerSchema>,
+      null,
+      null,
+    );
     // Then
     return (response as Promise<APIGatewayProxyResult>).then((res) => {
       expect(mockDeleteMenuplan$).toHaveBeenCalled();

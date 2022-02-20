@@ -1,4 +1,4 @@
-import { Name, Quantity, Recipe, RecipeId, Servings } from './recipe.model';
+import { Name, Recipe, RecipeId, Servings } from './recipe.model';
 
 describe('Recipe', () => {
   it('should construct from parameters', () => {
@@ -6,7 +6,7 @@ describe('Recipe', () => {
     const id = 'id';
     const name = 'Burger';
     const servings = 2;
-    const ingredients = [{ name: 'Patty', quantity: 2, uom: 'pcs' }];
+    const ingredients = [{ name: 'Patty', quantity: 2, uom: 'g' }];
     const preparation = { quantity: 30 };
     const season = 'summer';
     const costs = 3;
@@ -39,7 +39,6 @@ interface TestCase<T> {
 [
   { objName: 'Name', value: 'string', factory: (value: string) => Name.of(value) } as TestCase<Name>,
   { objName: 'Servings', value: 23, factory: (value: number) => Servings.of(value) } as TestCase<Servings>,
-  { objName: 'Quantity', value: 23, factory: (value: number) => Quantity.of(value) } as TestCase<Quantity>,
   { objName: 'RecipeId', value: 'id', factory: (value: string) => RecipeId.of(value) } as TestCase<RecipeId>,
 ].forEach((testCase) => {
   describe(`${testCase.objName}`, () => {

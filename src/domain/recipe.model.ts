@@ -1,10 +1,10 @@
 import { ok as assertOk } from 'assert';
 import { Cost } from './cost.model';
 import { Duration } from './duration.model';
+import { Ingredient } from './ingredient';
 import { MealType, MealTypes } from './mealtype.model';
 import { Region, RegionKeys } from './region.model';
 import { Season, SeasonKeys } from './season.model';
-import { Uom, UomKey } from './uom.model';
 
 // Object Values
 export class Name {
@@ -19,20 +19,6 @@ export class Servings {
   public static of(servingsCount: number): Servings {
     assertOk(servingsCount && servingsCount > 0, 'Servings should not be null or less than 1');
     return new Servings(servingsCount);
-  }
-}
-
-export class Quantity {
-  private constructor(public value: number) {}
-  public static of(quantity: number): Quantity {
-    assertOk(quantity && quantity > 0, 'Quantity should not be null or less than 1');
-    return new Quantity(quantity);
-  }
-}
-export class Ingredient {
-  private constructor(public name: Name, public uom: Uom, public quantity: Quantity) {}
-  public static of(name: string, uom: UomKey, quantity: number): Ingredient {
-    return new Ingredient(Name.of(name), Uom.of(uom), Quantity.of(quantity));
   }
 }
 
@@ -92,7 +78,7 @@ export class Recipe implements IRecipe {
       RecipeId.of(options.identity),
       Name.of(options.name),
       Servings.of(options.servings),
-      options.ingredients.map(({ name, quantity, uom }) => Ingredient.of(name, uom as UomKey, quantity)),
+      options.ingredients.map(({ name, quantity, uom }) => Ingredient.of(name, quantity, uom)),
       Duration.of(options.prepTime),
       Season.of(options.season),
       Cost.of(options.costs),

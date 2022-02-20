@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { recipe as MockRecipe, newRecipe as NewMockRecipe } from '@domain/mock.model';
-import { Ingredient } from '@domain/recipe.model';
+import { newRecipe as NewMockRecipe, recipe as MockRecipe } from '@domain/mock.model';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { RecipeEntity } from './recipe.entity';
 
@@ -21,8 +20,8 @@ describe('RecipeEntity', () => {
       servings: recipe.servings.value,
       ingredients: recipe.ingredients.map((it) => ({
         name: it.name.value,
-        uom: it.uom.value,
-        quantity: it.quantity.value,
+        uom: it.amount.uom,
+        quantity: it.amount.value,
       })),
       preparationTime: { ...recipe.preparationTime },
       season: recipe.season.value,
@@ -43,8 +42,8 @@ describe('RecipeEntity', () => {
       servings: recipe.servings.value,
       ingredients: recipe.ingredients.map((it) => ({
         name: it.name.value,
-        uom: it.uom.value,
-        quantity: it.quantity.value,
+        uom: it.amount.uom,
+        quantity: it.amount.value,
       })),
       preparationTime: { ...recipe.preparationTime },
       season: recipe.season.value,
@@ -73,9 +72,7 @@ describe('RecipeEntity', () => {
       identity: attrMap.identity,
       name: attrMap.name,
       servings: attrMap.servings,
-      ingredients: (attrMap.ingredients as Ingredient[]).map((it) => ({
-        ...it,
-      })),
+      ingredients: attrMap.ingredients,
       preparationTime: { ...attrMap.preparationTime },
       season: attrMap.season,
       costs: attrMap.costs,

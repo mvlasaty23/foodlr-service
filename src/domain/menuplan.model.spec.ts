@@ -1,10 +1,11 @@
 import { AssertionError } from 'assert';
 import { CostType } from './cost.model';
 import { Duration, DurationType } from './duration.model';
+import { Ingredient } from './ingredient';
 import { MealType, mealTypes } from './mealtype.model';
-import { ConsumerHabbits, Day, MenuPlanBuilder } from './menuplan.model';
-import { costs, recipe, seasons } from './mock.model';
-import { IRecipe, Name, RecipeId, Servings } from './recipe.model';
+import { ConsumerHabbits, Day, MenuPlan, MenuPlanBuilder, ShoppingList } from './menuplan.model';
+import { costs, recipe, seasons, user } from './mock.model';
+import { IRecipe, Name, Recipe, RecipeId, Servings } from './recipe.model';
 import { Region } from './region.model';
 
 describe('MenuPlanBuilder', () => {
@@ -19,18 +20,18 @@ describe('MenuPlanBuilder', () => {
       );
       const recipes: IRecipe[] = [recipe];
       // When
-      const menuPlan = new MenuPlanBuilder('mock-user', recipes)
+      const menuPlan = new MenuPlanBuilder(user, recipes)
         .withHabbits(habbits)
         .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'));
       // Then
       expect(menuPlan).toBeTruthy();
     });
     it('should validate input', () => {
-      expect(() => new MenuPlanBuilder('mock-user', []).build()).toThrow(AssertionError);
-      expect(() => new MenuPlanBuilder('mock-user', null).build()).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder(user, []).build()).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder(user, null).build()).toThrow(AssertionError);
       expect(() => new MenuPlanBuilder('', [recipe]).build()).toThrow(AssertionError);
       expect(() => new MenuPlanBuilder(null, [recipe]).build()).toThrow(AssertionError);
-      expect(() => new MenuPlanBuilder('mock-user', [recipe]).build()).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder(user, [recipe]).build()).toThrow(AssertionError);
     });
     it('should consider preferred costs', () => {
       // Given
@@ -76,7 +77,7 @@ describe('MenuPlanBuilder', () => {
         [CostType.LOW, CostType.MODERATE],
       );
       // When
-      const menuPlan = new MenuPlanBuilder('mock-user', recipes)
+      const menuPlan = new MenuPlanBuilder(user, recipes)
         .withHabbits(habbits)
         .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'))
         .build();
@@ -144,7 +145,7 @@ describe('MenuPlanBuilder', () => {
         [CostType.LOW, CostType.MODERATE],
       );
       // When
-      const menuPlan = new MenuPlanBuilder('mock-user', recipes)
+      const menuPlan = new MenuPlanBuilder(user, recipes)
         .withHabbits(habbits)
         .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'))
         .build();
@@ -212,7 +213,7 @@ describe('MenuPlanBuilder', () => {
         [CostType.LOW, CostType.MODERATE],
       );
       // When
-      const menuPlan = new MenuPlanBuilder('mock-user', recipes)
+      const menuPlan = new MenuPlanBuilder(user, recipes)
         .withHabbits(habbits)
         .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'))
         .build();
@@ -268,7 +269,7 @@ describe('MenuPlanBuilder', () => {
         [CostType.LOW, CostType.MODERATE],
       );
       // When
-      const menuPlan = new MenuPlanBuilder('mock-user', recipes)
+      const menuPlan = new MenuPlanBuilder(user, recipes)
         .withHabbits(habbits)
         .forPeriod(new Date('2021-01-01'), new Date('2021-01-02'))
         .build();
@@ -315,7 +316,7 @@ describe('MenuPlanBuilder', () => {
       const mealsPerDay = 2;
       const habbits = new ConsumerHabbits(mealsPerDay, [MealType.of('all')], [DurationType.FAST], [CostType.MODERATE]);
       // When
-      const menuPlan = new MenuPlanBuilder('mock-user', recipes)
+      const menuPlan = new MenuPlanBuilder(user, recipes)
         .withHabbits(habbits)
         .forPeriod(new Date('2021-09-21'), new Date('2021-09-22'))
         .build();
@@ -329,17 +330,17 @@ describe('MenuPlanBuilder', () => {
   });
   describe('withHabbits', () => {
     it('should validate input', () => {
-      expect(() => new MenuPlanBuilder('mock-user', []).withHabbits(null)).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder(user, []).withHabbits(null)).toThrow(AssertionError);
     });
   });
   describe('forPeriod', () => {
     it('should validate input', () => {
-      expect(() => new MenuPlanBuilder('mock-user', []).forPeriod(null, new Date())).toThrow(AssertionError);
-      expect(() => new MenuPlanBuilder('mock-user', []).forPeriod(new Date(), null)).toThrow(AssertionError);
-      expect(() => new MenuPlanBuilder('mock-user', []).forPeriod(null, null)).toThrow(AssertionError);
-      expect(() =>
-        new MenuPlanBuilder('mock-user', []).forPeriod(new Date('01/02/2021'), new Date('01/01/2021')),
-      ).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder(user, []).forPeriod(null, new Date())).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder(user, []).forPeriod(new Date(), null)).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder(user, []).forPeriod(null, null)).toThrow(AssertionError);
+      expect(() => new MenuPlanBuilder(user, []).forPeriod(new Date('01/02/2021'), new Date('01/01/2021'))).toThrow(
+        AssertionError,
+      );
     });
   });
 });
@@ -367,5 +368,38 @@ describe('Day', () => {
   it('should validate input', () => {
     expect(() => Day.of('')).toThrow(AssertionError);
     expect(() => Day.of(null)).toThrow(AssertionError);
+  });
+});
+describe('MenuPlan', () => {
+  it('should transform to ShoppingList', () => {
+    // Given
+    const menuPlan = new MenuPlan(
+      user,
+      [
+        Recipe.of({
+          identity: 'id',
+          name: 'name',
+          costs: 2,
+          ingredients: [
+            { name: 'name', uom: 'g', quantity: 2 },
+            { name: 'name', uom: 'g', quantity: 2 },
+            { name: 'name1', uom: 'g', quantity: 2 },
+          ],
+          prepTime: 2,
+          servings: 2,
+          region: 'eu-central',
+          season: 'all',
+          type: 'meat',
+        }),
+      ],
+      Day.of(new Date('2022-02-20')),
+      Day.of(new Date('2022-02-22')),
+    );
+    // When
+    const shoppingList = menuPlan.shoppingList();
+    // Then
+    expect(shoppingList).toStrictEqual(
+      new ShoppingList([Ingredient.of('name', 4, 'g'), Ingredient.of('name1', 2, 'g')]),
+    );
   });
 });
