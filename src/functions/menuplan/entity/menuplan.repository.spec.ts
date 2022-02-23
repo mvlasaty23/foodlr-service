@@ -47,6 +47,33 @@ describe('MenuplanRepository', () => {
       });
     });
   });
+  describe('findByPeriod$', () => {
+    it('should find a menuplan', () => {
+      // Given
+      const user = 'mockuser';
+      const startDay = '2021-01-01';
+      (mockDb.query as jest.Mock).mockReturnValue({
+        promise: () =>
+          Promise.resolve({
+            Items: [
+              {
+                user,
+                startDay: '2022-02-12',
+                endDay: '2022-02-14',
+                recipes: [],
+              },
+            ],
+          }),
+      });
+      // When
+      const menuplan = repository.findByPeriod$({ user, startDay });
+      // Then
+      return menuplan.then((result) => {
+        expect(mockDb.query).toHaveBeenCalled();
+        expect(result).toBeTruthy();
+      });
+    });
+  });
   describe('save$', () => {
     it('should save a menuplan', () => {
       // Given

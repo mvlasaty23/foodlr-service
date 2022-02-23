@@ -36,8 +36,8 @@ export class MenuPlanEntity implements Identifieable {
         servings: recipe.servings.value,
         ingredients: recipe.ingredients.map((i) => ({
           name: i.name.value,
-          quantity: i.quantity.value,
-          uom: i.uom.value,
+          quantity: i.amount.value,
+          uom: i.amount.uom as string,
         })),
         preparationTime: { value: recipe.preparationTime.value },
         costs: recipe.costs.value,

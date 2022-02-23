@@ -20,6 +20,24 @@ export class MenuplanRepository {
       .then((result) => result.Items.map((item) => MenuPlanEntity.of(item).toDomain()));
   }
 
+  public async findByPeriod$(identity: Identifieable): Promise<MenuPlan> {
+    return this.db
+      .query({
+        TableName: this.table,
+        KeyConditionExpression: '#u = :user and #d = :day',
+        ExpressionAttributeNames: {
+          '#u': 'user',
+          '#d': 'startDay',
+        },
+        ExpressionAttributeValues: {
+          ':user': identity.user,
+          ':day': identity.startDay,
+        },
+      })
+      .promise()
+      .then((result) => MenuPlanEntity.of(result.Items[0]).toDomain());
+  }
+
   public async save$(menuplan: MenuPlan): Promise<MenuPlan> {
     return this.db
       .put({

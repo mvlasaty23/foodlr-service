@@ -1,4 +1,4 @@
-import { ConsumerHabbits, Day, MenuPlan, MenuPlanBuilder } from '@domain/menuplan.model';
+import { ConsumerHabbits, Day, MenuPlan, MenuPlanBuilder, ShoppingList } from '@domain/menuplan.model';
 import { Region } from '@domain/region.model';
 import { RecipeFacade } from '@functions/recipe/api/recipe.facade';
 import { firstValueFrom } from 'rxjs';
@@ -21,6 +21,11 @@ export interface IDeleteCommand {
 
 export interface IUpdateCommand {
   menuplan: MenuPlan;
+}
+
+export interface IShoppinglistCommand {
+  user: string;
+  startDay: Day;
 }
 
 export default class MenuPlanService {
@@ -50,5 +55,11 @@ export default class MenuPlanService {
 
   public async updateMenuplan$(command: IUpdateCommand): Promise<MenuPlan> {
     return this.repository.save$(command.menuplan);
+  }
+
+  public async getShoppinglist$({ user, startDay }: IShoppinglistCommand): Promise<ShoppingList> {
+    return this.repository
+      .findByPeriod$({ user, startDay: startDay.toISOString() })
+      .then((menuplan) => menuplan.shoppingList());
   }
 }

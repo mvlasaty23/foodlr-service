@@ -16,6 +16,7 @@ describe('MenuPlanService', () => {
     findByUser$: jest.fn(),
     save$: jest.fn(),
     delete$: jest.fn(),
+    findByPeriod$: jest.fn(),
   };
   const service = new MenuPlanService(mockRecipeFacade as RecipeFacade, mockRepository as MenuplanRepository);
 
@@ -80,6 +81,21 @@ describe('MenuPlanService', () => {
       return service.updateMenuplan$(command).then((result) => {
         expect(result).toBeTruthy();
         expect(mockRepository.save$).toHaveBeenCalled();
+      });
+    });
+  });
+  describe('getShoppinglist$', () => {
+    it('should return a shoppinglist', () => {
+      // Given
+      const user = 'mockuser';
+      const startDay = Day.of('2021-01-01');
+      (mockRepository.findByPeriod$ as jest.Mock).mockReturnValue(Promise.resolve(menuplan));
+      // When
+      const shoppinglist = service.getShoppinglist$({ user, startDay });
+      // Then
+      return shoppinglist.then((result) => {
+        expect(mockRepository.findByPeriod$).toHaveBeenCalled();
+        expect(result).toBeTruthy();
       });
     });
   });
